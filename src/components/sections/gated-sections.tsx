@@ -6,6 +6,7 @@ import { LockedSection } from "./locked-section";
 import { Projects } from "./projects";
 import { Skills } from "./skills";
 import { useUnlock } from "@/components/providers/unlock-provider";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 const LOCKED_META = [
   {
@@ -53,10 +54,18 @@ export function GatedSections() {
   if (unlocked) {
     return (
       <>
-        <About />
-        <Skills />
-        <Experience />
-        <Projects />
+        <ErrorBoundary label="about">
+          <About />
+        </ErrorBoundary>
+        <ErrorBoundary label="skills">
+          <Skills />
+        </ErrorBoundary>
+        <ErrorBoundary label="experience">
+          <Experience />
+        </ErrorBoundary>
+        <ErrorBoundary label="projects">
+          <Projects />
+        </ErrorBoundary>
       </>
     );
   }

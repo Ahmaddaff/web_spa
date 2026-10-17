@@ -89,6 +89,14 @@ export function Minigame() {
     lastTs: 0,
   });
 
+  // loop control handle (start/stop) so the RAF loop can be paused when the
+  // canvas is off-screen or after the run ends, freeing the main thread.
+  const loopCtl = useRef<{
+    start: () => void;
+    stop: () => void;
+    errored: boolean;
+  }>({ start: () => {}, stop: () => {}, errored: false });
+
   /* ---------- load best score ---------- */
   useEffect(() => {
     try {
@@ -128,6 +136,9 @@ export function Minigame() {
         r: Math.random() * 1.4 + 0.4,
         p: Math.random() * Math.PI * 2,
       }));
+      // if the loop is parked (off-screen / after win), repaint once so a
+      // rotation or resize doesn't leave a cleared/blank canvas.
+      if (!s.running) render(performance.now());
     };
     resize();
     const ro = new ResizeObserver(resize);
@@ -175,6 +186,7 @@ export function Minigame() {
     s.particles = [];
     phaseRef.current = "playing";
     setPhase("playing");
+    loopCtl.current.start();
   }, []);
 
   const jump = useCallback(() => {
@@ -723,24 +735,57 @@ export function Minigame() {
 
   /* ---------- loop ---------- */
   useEffect(() => {
+    const s = g.current;
     const loop = (ts: number) => {
-      const s = g.current;
       if (!s.running) return;
       if (!s.lastTs) s.lastTs = ts;
       const dt = Math.min(50, ts - s.lastTs);
       s.lastTs = ts;
-      if (s.inView && phaseRef.current === "playing") update(dt);
-      else if (s.inView && (phaseRef.current === "win" || phaseRef.current === "over"))
-        updateParticles(dt);
-      render(ts);
+      try {
+        if (s.inView) {
+          if (phaseRef.current === "playing") {
+            update(dt);
+          } else if (phaseRef.current === "win" || phaseRef.current === "over") {
+            updateParticles(dt);
+            render(ts);
+            // celebration / death burst has settled — stop drawing to free the
+            // main thread (matters most on lower-powered mobile devices)
+            if (s.particles.length === 0) {
+              s.running = false;
+              cancelAnimationFrame(s.raf);
+              return;
+            }
+          } else {
+            render(ts);
+          }
+        }
+      } catch (err) {
+        // a transient canvas error must never silently kill the loop
+        if (!loopCtl.current.errored) {
+          loopCtl.current.errored = true;
+          console.error("[minigame] render loop error", err);
+        }
+        s.running = false;
+        cancelAnimationFrame(s.raf);
+        return;
+      }
       s.raf = requestAnimationFrame(loop);
     };
-    g.current.running = true;
-    g.current.raf = requestAnimationFrame(loop);
-    return () => {
-      g.current.running = false;
-      cancelAnimationFrame(g.current.raf);
+    const start = () => {
+      if (s.running) return;
+      s.running = true;
+      s.lastTs = 0;
+      s.raf = requestAnimationFrame(loop);
     };
+    const stop = () => {
+      s.running = false;
+      cancelAnimationFrame(s.raf);
+    };
+    loopCtl.current = { start, stop, errored: false };
+    // start only if the canvas is on-screen; the IntersectionObserver below
+    // will start/stop it as the section scrolls in and out of view.
+    if (s.inView) start();
+    return () => stop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -751,12 +796,19 @@ export function Minigame() {
     const io = new IntersectionObserver(
       ([entry]) => {
         g.current.inView = entry.isIntersecting;
+        if (entry.isIntersecting) loopCtl.current.start();
+        else loopCtl.current.stop();
       },
       { threshold: 0.15 }
     );
     io.observe(wrap);
     const onVis = () => {
-      if (document.hidden) g.current.inView = false;
+      if (document.hidden) {
+        g.current.inView = false;
+        loopCtl.current.stop();
+      } else {
+        loopCtl.current.start();
+      }
     };
     document.addEventListener("visibilitychange", onVis);
     return () => {
