@@ -58,6 +58,7 @@ export function Navbar() {
             alt="AHDAVERSE"
             width={49}
             height={36}
+            data-nav-mark
             className="h-9 w-auto opacity-95 transition group-hover:opacity-100"
           />
           <span className="hidden font-display text-sm font-semibold tracking-wide text-slate-200 sm:block">

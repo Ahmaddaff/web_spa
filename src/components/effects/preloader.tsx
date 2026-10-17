@@ -1,112 +1,143 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { motion, useAnimate } from "framer-motion";
 
-import { profile } from "@/data/site-data";
+const BRAND_MARK = "/images/ahdaverse-mark.png";
+const BASE = 64; // base size (px) of the flying logo — matches its on-screen box
 
-const letters = profile.name.toUpperCase().split("");
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
+  return reduced;
+}
 
 /**
- * Lusion-style preloader: percentage counter, letter-by-letter name reveal,
- * then the whole panel wipes upward to unveil the site. Locks page scroll
- * while visible.
+ * AHDAVERSE intro: the brand mark + wordmark appear, the mark spins and
+ * zooms in until it fills the screen, then zooms back out to the navbar logo
+ * in the top-left corner — landing exactly on it — and the curtain fades to
+ * reveal page 1 (Hero). On reduced-motion it just fades through quickly.
  */
 export function Preloader() {
-  const [progress, setProgress] = useState(0);
   const [done, setDone] = useState(false);
+  const [scope, animate] = useAnimate<HTMLDivElement>();
+  const reduced = usePrefersReducedMotion();
 
+  // lock page scroll while the curtain is up
   useEffect(() => {
-    // lock scroll while the curtain is up; restore once the wipe completes
-    if (done) {
-      document.body.style.overflow = "";
-    } else {
-      document.body.style.overflow = "hidden";
-    }
+    document.body.style.overflow = done ? "" : "hidden";
   }, [done]);
 
   useEffect(() => {
-    const start = performance.now();
-    const duration = 1900;
-    let raf = 0;
-    let doneTimer: ReturnType<typeof setTimeout>;
+    if (reduced) {
+      const t = setTimeout(() => setDone(true), 600);
+      return () => clearTimeout(t);
+    }
+    let cancelled = false;
+    (async () => {
+      // wait two frames so the navbar (landing target) is laid out
+      await new Promise((r) =>
+        requestAnimationFrame(() => requestAnimationFrame(r))
+      );
 
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - t, 2.4);
-      setProgress(Math.round(eased * 100));
-      if (t < 1) {
-        raf = requestAnimationFrame(tick);
-      } else {
-        doneTimer = setTimeout(() => setDone(true), 280);
+      const logoEl = document.querySelector<HTMLElement>("[data-p-logo]");
+      const markEl = document.querySelector<HTMLElement>("[data-nav-mark]");
+      let target = { scale: 1, x: 0, y: 0 };
+      if (logoEl && markEl) {
+        const lr = logoEl.getBoundingClientRect();
+        const mr = markEl.getBoundingClientRect();
+        const lcx = (lr.left + lr.right) / 2;
+        const lcy = (lr.top + lr.bottom) / 2;
+        const mcx = (mr.left + mr.right) / 2;
+        const mcy = (mr.top + mr.bottom) / 2;
+        target = {
+          scale: mr.width / lr.width,
+          x: mcx - lcx,
+          y: mcy - lcy,
+        };
       }
-    };
-    raf = requestAnimationFrame(tick);
+      // scale that makes the brand disc cover the whole viewport
+      const cover =
+        (Math.max(window.innerWidth, window.innerHeight) / BASE) * 1.3;
+
+      await animate(
+        "[data-p-word]",
+        { opacity: [0, 1], y: [16, 0] },
+        { duration: 0.5, ease: "easeOut" }
+      );
+      await animate(
+        "[data-p-logo]",
+        { opacity: [0, 1], scale: [0.65, 1] },
+        { duration: 0.55, ease: "easeOut" }
+      );
+      await new Promise((r) => setTimeout(r, 220));
+
+      // zoom IN — spin + scale until it covers the screen
+      await animate(
+        "[data-p-logo]",
+        { scale: cover, rotate: 360 },
+        { duration: 0.95, ease: [0.66, 0, 0.34, 1] }
+      );
+      // wordmark fades as the mark takes over (runs in parallel)
+      animate(
+        "[data-p-word]",
+        { opacity: 0, scale: 1.5 },
+        { duration: 0.45, ease: "easeIn" }
+      );
+
+      // zoom OUT — shrink to the navbar mark size and fly into the corner
+      await animate(
+        "[data-p-logo]",
+        { scale: target.scale, x: target.x, y: target.y, rotate: 720 },
+        { duration: 0.9, ease: [0.7, 0, 0.18, 1] }
+      );
+      // drop the brand disc so only the mark remains (matches the navbar logo)
+      await animate("[data-p-disc]", { opacity: 0 }, { duration: 0.45, ease: "easeOut" });
+
+      // open page 1 — fade the curtain away
+      await animate(scope.current, { opacity: 0 }, { duration: 0.5, ease: "easeOut" });
+      if (!cancelled) setDone(true);
+    })();
     return () => {
-      cancelAnimationFrame(raf);
-      clearTimeout(doneTimer);
+      cancelled = true;
     };
-  }, []);
+  }, [animate, reduced, scope]);
+
+  if (done) return null;
 
   return (
-    <AnimatePresence>
-      {!done && (
-        <motion.div
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#050505]"
-          exit={{ y: "-100%" }}
-          transition={{ duration: 0.85, ease: [0.76, 0, 0.24, 1] }}
-        >
-          {/* corner mono labels */}
-          <span className="absolute left-6 top-6 font-mono text-[10px] uppercase tracking-[0.3em] text-slate-600">
-            portfolio&nbsp;//&nbsp;v3
-          </span>
-          <span className="absolute right-6 top-6 font-mono text-[10px] uppercase tracking-[0.3em] text-slate-600">
-            loading
-          </span>
+    <div
+      ref={scope}
+      className="fixed inset-0 z-[200] flex flex-col items-center justify-center gap-6 overflow-hidden bg-[#0a0a0a]"
+    >
+      <div
+        data-p-logo
+        className="relative h-16 w-16 opacity-0 will-change-transform"
+        style={{ transformOrigin: "center" }}
+      >
+        <div
+          data-p-disc
+          className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400 via-sky-400 to-violet-500 shadow-[0_0_70px_rgba(34,211,238,0.55)]"
+        />
+        <Image
+          src={BRAND_MARK}
+          alt="AHDAVERSE"
+          fill
+          priority
+          sizes="64px"
+          className="relative z-10 object-contain"
+        />
+      </div>
 
-          {/* letter-by-letter name reveal */}
-          <div className="flex flex-wrap justify-center px-6" aria-label={profile.name}>
-            {letters.map((char, i) => (
-              <span
-                key={`${char}-${i}`}
-                className="inline-block overflow-hidden pb-[0.08em] align-bottom"
-              >
-                <motion.span
-                  className="inline-block font-display text-3xl font-extrabold tracking-tight text-slate-100 sm:text-5xl"
-                  initial={{ y: "110%" }}
-                  animate={{ y: 0 }}
-                  transition={{
-                    duration: 0.6,
-                    delay: 0.1 + i * 0.045,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                >
-                  {char === " " ? "\u00A0" : char}
-                </motion.span>
-              </span>
-            ))}
-          </div>
-
-          {/* counter */}
-          <motion.p
-            className="mt-8 font-mono text-sm tabular-nums tracking-[0.3em] text-cyan-300"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.4 }}
-          >
-            {String(progress).padStart(3, "0")}
-            <span className="text-slate-600">%</span>
-          </motion.p>
-
-          {/* progress line */}
-          <div className="absolute bottom-0 left-0 h-[3px] w-full bg-white/5">
-            <motion.div
-              className="h-full origin-left bg-gradient-to-r from-cyan-400 to-violet-500 shadow-[0_0_12px_rgba(34,211,238,0.6)]"
-              style={{ scaleX: progress / 100 }}
-            />
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+      <span
+        data-p-word
+        className="pointer-events-none select-none font-display text-2xl font-extrabold tracking-[0.4em] text-gradient opacity-0 sm:text-3xl"
+      >
+        AHDAVERSE
+      </span>
+    </div>
   );
 }
