@@ -1,0 +1,38 @@
+import { Contact } from "@/components/sections/contact";
+import { Hero } from "@/components/sections/hero";
+import { Minigame } from "@/components/sections/minigame";
+import { GatedSections } from "@/components/sections/gated-sections";
+import { GridBackground } from "@/components/effects/grid-background";
+import { TechMarquee } from "@/components/effects/tech-marquee";
+import { StatementMarquee } from "@/components/effects/statement-marquee";
+import { Preloader } from "@/components/effects/preloader";
+import { BackToTop } from "@/components/effects/back-to-top";
+import { CursorGlow } from "@/components/effects/cursor-glow";
+import { NoiseOverlay } from "@/components/effects/noise-overlay";
+import { RouteTransition } from "@/components/effects/route-transition";
+import { UnlockProvider } from "@/components/providers/unlock-provider";
+import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
+
+export default function Home() {
+  return (
+    <UnlockProvider>
+      <main className="relative min-h-screen overflow-x-hidden">
+        <Preloader />
+        <GridBackground />
+        <Navbar />
+        <Hero />
+        <TechMarquee />
+        <GatedSections />
+        <Minigame />
+        <StatementMarquee />
+        <Contact />
+        <Footer />
+        <BackToTop />
+        <RouteTransition />
+        <CursorGlow />
+        <NoiseOverlay />
+      </main>
+    </UnlockProvider>
+  );
+}
