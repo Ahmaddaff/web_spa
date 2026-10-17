@@ -28,4 +28,5 @@ next-env.d.ts
 
 # local build & verification artifacts
 build-full.log
+server.log
 .verify/

@@ -301,20 +301,6 @@ export function Hero() {
         </motion.div>
       </div>
 
-      <motion.a
-        href="#about"
-        aria-label="Scroll to about section"
-        animate={{ x: "-50%", y: [0, 8, 0] }}
-        transition={{ duration: 1.8, repeat: Infinity }}
-        className="absolute bottom-7 left-1/2 z-10 flex-col items-center gap-2 text-slate-500 transition hover:text-cyan-300 lg:flex"
-      >
-        <span className="font-mono text-[11px] uppercase tracking-[0.25em]">
-          scroll
-        </span>
-        <span className="flex h-9 w-6 items-start justify-center rounded-full border border-slate-600 p-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
-        </span>
-      </motion.a>
     </section>
   );
 }

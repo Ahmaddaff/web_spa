@@ -100,7 +100,7 @@ export function About() {
           >
             <div className="mb-3 inline-flex items-center gap-2 rounded-md border border-white/10 bg-black/30 px-2.5 py-1 font-mono text-[11px] text-slate-500">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              profile.txt
+              AHDAVERSE
             </div>
             <div className="space-y-4 text-[15px] leading-relaxed text-slate-400">
               <p className="text-justify">{profile.bio}</p>

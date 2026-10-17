@@ -59,9 +59,18 @@ export function Preloader() {
           y: mcy - lcy,
         };
       }
-      // scale that makes the brand disc cover the whole viewport
+      // scale that makes the brand mark dominate the whole viewport
       const cover =
         (Math.max(window.innerWidth, window.innerHeight) / BASE) * 1.3;
+
+      // arc the flight into the corner so the path is non-linear and abstract
+      // (perpendicular bulge off the straight line from screen center to target)
+      const dist = Math.hypot(target.x, target.y) || 1;
+      const px = -target.y / dist;
+      const py = target.x / dist;
+      const bulge = 0.18 * dist;
+      const midX = target.x * 0.5 + px * bulge;
+      const midY = target.y * 0.5 + py * bulge;
 
       await animate(
         "[data-p-word]",
@@ -89,13 +98,17 @@ export function Preloader() {
       );
 
       // zoom OUT — shrink to the navbar mark size and fly into the corner
+      // along a curved (abstract) arc so the path never reads as "cheesy"
       await animate(
         "[data-p-logo]",
-        { scale: target.scale, x: target.x, y: target.y, rotate: 720 },
-        { duration: 0.9, ease: [0.7, 0, 0.18, 1] }
+        {
+          scale: [cover, target.scale],
+          x: [0, midX, target.x],
+          y: [0, midY, target.y],
+          rotate: [360, 720],
+        },
+        { duration: 0.95, ease: [0.7, 0, 0.18, 1] }
       );
-      // drop the brand disc so only the mark remains (matches the navbar logo)
-      await animate("[data-p-disc]", { opacity: 0 }, { duration: 0.45, ease: "easeOut" });
 
       // open page 1 — fade the curtain away
       await animate(scope.current, { opacity: 0 }, { duration: 0.5, ease: "easeOut" });
@@ -118,10 +131,6 @@ export function Preloader() {
         className="relative h-16 w-16 opacity-0 will-change-transform"
         style={{ transformOrigin: "center" }}
       >
-        <div
-          data-p-disc
-          className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400 via-sky-400 to-violet-500 shadow-[0_0_70px_rgba(34,211,238,0.55)]"
-        />
         <Image
           src={BRAND_MARK}
           alt="AHDAVERSE"
