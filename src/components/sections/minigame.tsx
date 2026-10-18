@@ -841,7 +841,6 @@ export function Minigame() {
       className="relative px-6 py-24"
     >
       <SectionHeading
-        index="02"
         eyebrow=".play()"
         title="Minigame"
         description="Bantu Dafanda berlari, lompati bug-nya, kumpulkan chip-nya. Menangkan game ini untuk membuka bagian halaman yang masih dirahasiakan."

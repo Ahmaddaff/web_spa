@@ -70,7 +70,6 @@ export function Contact() {
     >
       <div className="container">
         <SectionHeading
-          index="07"
           eyebrow=".contact()"
           title="Let's Work Together"
           description="Punya ide proyek, ajakan kolaborasi, atau sekadar ingin menyapa? Jangan ragu untuk menghubungi saya."

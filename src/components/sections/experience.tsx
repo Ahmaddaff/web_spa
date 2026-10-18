@@ -32,7 +32,6 @@ export function Experience() {
     >
       <div className="container">
         <SectionHeading
-          index="05"
           eyebrow=".experience()"
           title="Leadership & Organization Journey"
           description="Perjalanan organisasi, kepanitiaan, dan kepemimpinan yang membentuk cara saya bekerja, berkolaborasi, dan memberi dampak."

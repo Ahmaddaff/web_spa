@@ -37,7 +37,6 @@ export function Skills() {
     >
       <div className="container">
         <SectionHeading
-          index="04"
           eyebrow=".skills()"
           title="Tools I Work With"
           description="Kombinasi kemampuan teknis dan soft skills yang saya asah melalui perkuliahan, proyek, dan pengalaman organisasi."
