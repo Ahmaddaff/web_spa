@@ -121,13 +121,18 @@ export function HeroScene() {
   return (
     <div
       ref={ref}
-      className={`pointer-events-none absolute inset-0 z-0 ${
-        contextLost ? "bg-background" : ""
-      }`}
+      className="pointer-events-none absolute inset-0 z-0 bg-background"
     >
       <Canvas
         frameloop={inView ? "always" : "never"}
-        style={{ opacity: contextLost ? 0 : 1, transition: "opacity .3s" }}
+        style={{
+          opacity: contextLost ? 0 : 1,
+          transition: "opacity .3s",
+          // a lost WebGL context can clear the buffer to white on some drivers;
+          // paint the canvas element itself dark so any transparent/blank frame
+          // shows the page colour instead of the browser's white canvas
+          backgroundColor: "hsl(var(--background))",
+        }}
         camera={{ position: [0, 0, 6], fov: 45 }}
         dpr={[1, 1.5]}
         gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}

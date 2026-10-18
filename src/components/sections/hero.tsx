@@ -49,7 +49,7 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="relative flex min-h-screen items-center overflow-hidden pb-24 pt-28"
+      className="relative flex min-h-screen items-center overflow-hidden bg-background pb-24 pt-28"
     >
       {/* soft glows */}
       <div
