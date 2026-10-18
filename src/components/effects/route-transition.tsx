@@ -31,7 +31,9 @@ export function RouteTransition() {
   const jumpTo = useCallback((hash: string) => {
     const el = document.querySelector(hash);
     if (el) {
-      el.scrollIntoView({ behavior: "auto", block: "start" });
+      // "instant" overrides the CSS smooth-scroll value — the route transition
+      // is meant to jump while the screen is covered, not scroll visibly
+      el.scrollIntoView({ behavior: "instant", block: "start" });
       history.replaceState(null, "", hash);
     }
   }, []);

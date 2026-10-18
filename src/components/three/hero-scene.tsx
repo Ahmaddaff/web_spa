@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
   Float,
@@ -8,7 +8,7 @@ import {
   MeshDistortMaterial,
   Stars,
 } from "@react-three/drei";
-import type { Group, Mesh } from "three";
+import type { Group, Mesh, WebGLRenderer } from "three";
 import { useScroll, useSpring, type MotionValue } from "framer-motion";
 
 function CoreMesh({ progress }: { progress: MotionValue<number> }) {
@@ -74,9 +74,20 @@ function CoreMesh({ progress }: { progress: MotionValue<number> }) {
  * Interactive 3D hero background: a floating distorted icosahedron with a
  * wireframe shell and a particle starfield. The core follows the cursor and
  * reacts to scroll progress through the hero section.
+ *
+ * Two guards keep a blank canvas from ever showing up on the dashboard:
+ *  - the render loop stops while the hero is off screen, so the GPU is not
+ *    drawing a section nobody is looking at (and the browser is far less
+ *    likely to reclaim the drawing buffer while the visitor scrolls away)
+ *  - a lost WebGL context paints the canvas blank/white until it comes back,
+ *    so the canvas is hidden — and the hero falls back to the page colour —
+ *    until the context is restored
  */
 export function HeroScene() {
   const ref = useRef<HTMLDivElement>(null);
+  const glRef = useRef<WebGLRenderer | null>(null);
+  const [inView, setInView] = useState(true);
+  const [contextLost, setContextLost] = useState(false);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -86,12 +97,48 @@ export function HeroScene() {
     damping: 22,
   });
 
+  // only render while the hero is on (or near) screen
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { rootMargin: "200px 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // some drivers lose the context without a reliable event order — re-check
+  // whenever the hero scrolls back into view
+  useEffect(() => {
+    if (!inView) return;
+    const gl = glRef.current;
+    if (!gl) return;
+    setContextLost(gl.getContext().isContextLost());
+  }, [inView]);
+
   return (
-    <div ref={ref} className="pointer-events-none absolute inset-0 z-0">
+    <div
+      ref={ref}
+      className={`pointer-events-none absolute inset-0 z-0 ${
+        contextLost ? "bg-background" : ""
+      }`}
+    >
       <Canvas
+        frameloop={inView ? "always" : "never"}
+        style={{ opacity: contextLost ? 0 : 1, transition: "opacity .3s" }}
         camera={{ position: [0, 0, 6], fov: 45 }}
         dpr={[1, 1.5]}
         gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
+        onCreated={({ gl }) => {
+          glRef.current = gl;
+          const canvas = gl.domElement;
+          canvas.addEventListener("webglcontextlost", () => setContextLost(true));
+          canvas.addEventListener("webglcontextrestored", () =>
+            setContextLost(false)
+          );
+        }}
       >
         <ambientLight intensity={0.7} />
         <directionalLight position={[5, 5, 5]} intensity={1.4} color="#67e8f9" />
