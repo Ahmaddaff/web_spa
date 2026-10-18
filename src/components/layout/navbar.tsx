@@ -54,16 +54,13 @@ export function Navbar() {
       <nav className="container flex h-16 items-center justify-between">
         <Link href="#home" className="group flex items-center gap-3">
           <Image
-            src="/images/ahdaverse-mark.png"
+            src="/images/ahdaverse-logo.png"
             alt="AHDAVERSE"
-            width={49}
-            height={36}
+            width={140}
+            height={32}
             data-nav-mark
-            className="h-9 w-auto opacity-95 transition group-hover:opacity-100"
+            className="h-8 w-auto opacity-95 transition group-hover:opacity-100"
           />
-          <span className="hidden font-display text-sm font-semibold tracking-wide text-slate-200 sm:block">
-            {profile.name}
-          </span>
         </Link>
 
         <ul className="hidden items-center gap-1 md:flex">

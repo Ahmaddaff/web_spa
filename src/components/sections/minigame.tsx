@@ -55,7 +55,7 @@ interface Particle {
 export function Minigame() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLImageElement | null>(null);
+  const spriteRef = useRef<HTMLImageElement | null>(null);
   const phaseRef = useRef<Phase>("ready");
   const [phase, setPhase] = useState<Phase>("ready");
   const [best, setBest] = useState(0);
@@ -107,14 +107,29 @@ export function Minigame() {
     }
   }, []);
 
-  /* ---------- load character head (face + neck cutout, no laptop) ---------- */
+  /* ---------- load character sprite sheet (8 frames, transparent bg) ---------- */
   useEffect(() => {
     const img = new Image();
-    img.src = "/images/runner-head.png";
+    img.src = "/images/runner-spritesheet.png";
     img.onload = () => {
-      imgRef.current = img;
+      spriteRef.current = img;
     };
   }, []);
+
+  /* sprite sheet frame metadata (matching runner-frames.json) */
+  const FRAMES = useRef([
+    { x: 87, y: 172, w: 111, h: 460 }, // 0: running
+    { x: 0, y: 187, w: 198, h: 445 },  // 1: running
+    { x: 0, y: 191, w: 198, h: 441 },  // 2: running
+    { x: 0, y: 140, w: 198, h: 414 },  // 3: JUMP (legs tucked, mid-air)
+    { x: 0, y: 123, w: 198, h: 508 },  // 4: running (tallest)
+    { x: 0, y: 177, w: 198, h: 429 },  // 5: running
+    { x: 0, y: 226, w: 198, h: 405 },  // 6: running
+    { x: 0, y: 187, w: 149, h: 444 },  // 7: running
+  ]).current;
+  const FRAME_W = 198; // each frame is 198px wide in the sprite sheet
+  const RUN_FRAMES = [0, 1, 2, 4, 5, 6, 7]; // skip 3 (jump) for ground cycle
+  const CHAR_TARGET_H = 92; // game character target height in px
 
   /* ---------- sizing ---------- */
   useEffect(() => {
@@ -323,9 +338,9 @@ export function Minigame() {
     s.bugs = s.bugs.filter((b) => b.x + b.w > s.camX - 80);
     s.chips = s.chips.filter((c) => c.x > s.camX - 80 && !c.taken);
 
-    // collisions
+    // collisions (match the sprite character size: 92px tall)
     const charW = 56;
-    const charH = 84;
+    const charH = 92;
     const cx = s.w * 0.16;
     const cyTop = s.h - GROUND_H - s.charY - charH;
     const cx0 = cx + 10;
@@ -353,8 +368,8 @@ export function Minigame() {
       if (c.taken) continue;
       const px = c.x - s.camX;
       // vertical distance in above-ground terms: character center vs chip
-      const dy = Math.abs(s.charY + 42 - c.y);
-      if (Math.abs(px - cx) < 44 && dy < 52) {
+      const dy = Math.abs(s.charY + 46 - c.y);
+      if (Math.abs(px - cx) < 44 && dy < 56) {
         c.taken = true;
         s.score += 10;
         spawnBurst(px, s.h - c.y, "#22d3ee", 8);
@@ -476,75 +491,112 @@ export function Minigame() {
       ctx.restore();
     }
 
-    // bugs
+    // bugs — detailed obstacles: oval body, animated legs, curved antennae, pulsing eyes
     for (const b of s.bugs) {
       const bx = b.x - s.camX;
       if (bx < -60 || bx > w + 60) continue;
       const by = h - b.y - b.h + (b.kind === "air" ? Math.sin(t * 4 + b.bob) * 6 : 0);
+      const cx2 = bx + b.w / 2;
+      const cy2 = by + b.h / 2;
+      // zone-based color (each zone gets a different hue)
+      const zoneColors = ["#f43f5e", "#a78bfa", "#22d3ee", "#fbbf24"];
+      const baseColor = zoneColors[s.zone % zoneColors.length];
       ctx.save();
-      ctx.translate(bx + b.w / 2, by + b.h / 2);
-      // body
-      ctx.fillStyle = "#f43f5e";
-      ctx.shadowColor = "rgba(244,63,94,0.5)";
-      ctx.shadowBlur = 10;
-      roundRect(ctx, -b.w / 2, -b.h / 2, b.w, b.h, 7);
+      ctx.translate(cx2, cy2);
+      // outer glow
+      ctx.shadowColor = baseColor;
+      ctx.shadowBlur = 14;
+      // body (oval)
+      ctx.fillStyle = baseColor;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, b.w / 2, b.h / 2.2, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.shadowBlur = 0;
-      // antennae
-      ctx.strokeStyle = "#fda4af";
+      // body highlight
+      ctx.fillStyle = "rgba(255,255,255,0.18)";
+      ctx.beginPath();
+      ctx.ellipse(-b.w * 0.15, -b.h * 0.2, b.w * 0.25, b.h * 0.15, 0, 0, Math.PI * 2);
+      ctx.fill();
+      // 6 animated legs (3 pairs)
+      const legPhase = t * 7 + b.bob;
+      ctx.strokeStyle = baseColor;
       ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      for (let i = -1; i <= 1; i++) {
+        const swing = Math.sin(legPhase + i * 1.3) * 3;
+        ctx.beginPath();
+        ctx.moveTo(-b.w * 0.12, b.h * 0.25 + i * 4);
+        ctx.lineTo(-b.w * 0.12 - 5 + swing, b.h * 0.25 + i * 4 + 7);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(b.w * 0.12, b.h * 0.25 + i * 4);
+        ctx.lineTo(b.w * 0.12 + 5 - swing, b.h * 0.25 + i * 4 + 7);
+        ctx.stroke();
+      }
+      // curved antennae
+      ctx.strokeStyle = "rgba(255,255,255,0.7)";
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.moveTo(-b.w / 4, -b.h / 2);
-      ctx.lineTo(-b.w / 4 - 4, -b.h / 2 - 7);
-      ctx.moveTo(b.w / 4, -b.h / 2);
-      ctx.lineTo(b.w / 4 + 4, -b.h / 2 - 7);
+      ctx.moveTo(-b.w * 0.18, -b.h * 0.42);
+      ctx.quadraticCurveTo(-b.w * 0.28, -b.h * 0.62, -b.w * 0.22, -b.h * 0.72);
       ctx.stroke();
-      // eyes
-      ctx.fillStyle = "#fff";
       ctx.beginPath();
-      ctx.arc(-5, -2, 3.4, 0, Math.PI * 2);
-      ctx.arc(5, -2, 3.4, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#111";
+      ctx.moveTo(b.w * 0.18, -b.h * 0.42);
+      ctx.quadraticCurveTo(b.w * 0.28, -b.h * 0.62, b.w * 0.22, -b.h * 0.72);
+      ctx.stroke();
+      // antennae tips (glowing)
+      const tipGlow = 0.6 + 0.4 * Math.sin(t * 5 + b.bob);
+      ctx.fillStyle = `rgba(255,255,255,${tipGlow})`;
+      ctx.shadowColor = "#fff";
+      ctx.shadowBlur = 6;
       ctx.beginPath();
-      ctx.arc(-5, -2, 1.5, 0, Math.PI * 2);
-      ctx.arc(5, -2, 1.5, 0, Math.PI * 2);
+      ctx.arc(-b.w * 0.22, -b.h * 0.72, 2, 0, Math.PI * 2);
+      ctx.arc(b.w * 0.22, -b.h * 0.72, 2, 0, Math.PI * 2);
       ctx.fill();
+      ctx.shadowBlur = 0;
+      // pulsing eyes
+      const eyePulse = 0.7 + 0.3 * Math.sin(t * 3 + b.bob);
+      ctx.fillStyle = `rgba(255,255,255,${eyePulse})`;
+      ctx.shadowColor = "#fff";
+      ctx.shadowBlur = 5;
+      ctx.beginPath();
+      ctx.arc(-b.w * 0.18, -b.h * 0.12, 2.8, 0, Math.PI * 2);
+      ctx.arc(b.w * 0.18, -b.h * 0.12, 2.8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
       ctx.restore();
     }
 
-    // character — full runner: photo head + canvas-drawn body (head to toe)
-    const img = imgRef.current;
-    const cw = 62;
-    const ch = 86;
+    // character — sprite sheet frames (8 frames, transparent bg, smooth cycle)
+    const sprite = spriteRef.current;
+    const cw = 62; // collision box width (used for game logic)
+    const ch = CHAR_TARGET_H; // visual height
     const cx = w * 0.16;
     const grounded = s.grounded;
-    const runPhase = s.runT / 78;
-    const bob = grounded ? Math.sin(runPhase * 2) * 1.6 : 0;
+    const runPhase = s.runT / 75; // ~13 fps — smooth running cycle
+    const bob = grounded ? Math.sin(runPhase * Math.PI * 2) * 1.8 : 0;
     const feetY = h - GROUND_H - s.charY;
-    const hipY = feetY - 29;
     const lean = grounded
-      ? 0.06
-      : Math.max(-0.14, Math.min(0.14, s.vy * 0.012)) +
-        (s.vy < 0 ? 0.05 : -0.03);
+      ? 0.05
+      : Math.max(-0.12, Math.min(0.12, s.vy * 0.01));
     const flash = s.invincible > 0 && Math.floor(ts / 90) % 2 === 0;
 
-    if (!img) {
-      // fallback silhouette until the head loads
+    if (!sprite) {
+      // fallback silhouette until the sprite sheet loads
       ctx.fillStyle = "#22d3ee";
-      roundRect(ctx, cx, h - GROUND_H - s.charY - ch, cw, ch, 10);
+      roundRect(ctx, cx, feetY - ch, cw, ch, 10);
       ctx.fill();
     } else {
-      // shadow — shrinks as the runner rises
-      const sh = 1 - Math.min(0.55, s.charY / 240);
-      ctx.globalAlpha = 0.35 * sh;
+      // ground shadow — shrinks as the runner rises
+      const shadowScale = 1 - Math.min(0.55, s.charY / 240);
+      ctx.globalAlpha = 0.35 * shadowScale;
       ctx.fillStyle = "#000";
       ctx.beginPath();
       ctx.ellipse(
         cx + cw / 2,
         h - GROUND_H + 6,
-        26 * sh,
-        6 * sh,
+        28 * shadowScale,
+        6 * shadowScale,
         0,
         0,
         Math.PI * 2
@@ -552,140 +604,30 @@ export function Minigame() {
       ctx.fill();
       ctx.globalAlpha = 1;
 
+      // select frame: jump frame when airborne, otherwise cycle ground frames
+      let frameIndex: number;
+      if (!grounded) {
+        frameIndex = 3; // jump frame (legs tucked)
+      } else {
+        const cyclePos = Math.floor(runPhase) % RUN_FRAMES.length;
+        frameIndex = RUN_FRAMES[cyclePos];
+      }
+      const fm = FRAMES[frameIndex];
+      const scale = CHAR_TARGET_H / fm.h;
+      const drawW = fm.w * scale;
+      const drawH = fm.h * scale;
+      // source rect in the sprite sheet
+      const srcX = frameIndex * FRAME_W + fm.x;
+      const srcY = fm.y;
+      const srcW = fm.w;
+      const srcH = fm.h;
+
       ctx.save();
-      ctx.translate(cx + cw / 2, hipY + bob);
+      ctx.translate(cx + cw / 2, feetY + bob);
       ctx.rotate(lean);
       if (flash) ctx.globalAlpha = 0.35;
-
-      const shirt = "#96bedc";
-      const shirtFar = "#7ba3c2";
-      const pants = "#334155";
-      const pantsFar = "#273549";
-      const skin = "rgb(199,163,147)";
-      const shoe = "#1e293b";
-
-      /* pose angles — 0 = straight down, positive = forward (run direction) */
-      let thighNear: number, kneeNear: number, thighFar: number, kneeFar: number;
-      let armNear: number, elbowNear: number, armFar: number, elbowFar: number;
-      if (grounded) {
-        // running cycle — legs counter-swing, knees bend on recovery,
-        // arms pump opposite to the legs
-        const sw = Math.sin(runPhase);
-        thighNear = sw * 0.55;
-        kneeNear = 0.25 + Math.max(0, -sw) * 0.85;
-        thighFar = -sw * 0.55;
-        kneeFar = 0.25 + Math.max(0, sw) * 0.85;
-        armNear = -sw * 0.45;
-        elbowNear = 0.35 + Math.max(0, sw) * 0.4;
-        armFar = sw * 0.45;
-        elbowFar = 0.35 + Math.max(0, -sw) * 0.4;
-      } else if (s.vy < 0) {
-        // rising — tuck the legs, drive the arms up
-        thighNear = 0.8;
-        kneeNear = 1.15;
-        thighFar = -0.45;
-        kneeFar = 0.95;
-        armNear = 2.55;
-        elbowNear = 0.45;
-        armFar = 2.3;
-        elbowFar = 0.55;
-      } else {
-        // falling — legs reach down, arms out for balance
-        thighNear = 0.35;
-        kneeNear = 0.2;
-        thighFar = -0.3;
-        kneeFar = 0.35;
-        armNear = 2.45;
-        elbowNear = 0.3;
-        armFar = 2.2;
-        elbowFar = 0.4;
-      }
-
-      // two-segment limb (thigh/upper-arm + calf/forearm) with shoe/hand cap
-      const limb = (
-        ox: number,
-        oy: number,
-        a1: number,
-        l1: number,
-        a2: number,
-        l2: number,
-        w1: number,
-        w2: number,
-        color: string,
-        cap: "shoe" | "hand"
-      ) => {
-        const kx = ox + Math.sin(a1) * l1;
-        const ky = oy + Math.cos(a1) * l1;
-        ctx.strokeStyle = color;
-        ctx.lineCap = "round";
-        ctx.lineWidth = w1;
-        ctx.beginPath();
-        ctx.moveTo(ox, oy);
-        ctx.lineTo(kx, ky);
-        ctx.stroke();
-        const a2abs = a1 + a2;
-        const ex = kx + Math.sin(a2abs) * l2;
-        const ey = ky + Math.cos(a2abs) * l2;
-        ctx.lineWidth = w2;
-        ctx.beginPath();
-        ctx.moveTo(kx, ky);
-        ctx.lineTo(ex, ey);
-        ctx.stroke();
-        if (cap === "shoe") {
-          ctx.save();
-          ctx.translate(ex, ey);
-          ctx.rotate(a2abs);
-          ctx.fillStyle = shoe;
-          ctx.beginPath();
-          ctx.ellipse(2.5, 1, 6.5, 3.5, 0, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
-        } else {
-          ctx.fillStyle = skin;
-          ctx.beginPath();
-          ctx.arc(ex, ey, 3.2, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      };
-
-      /* ---- far side of the body (behind the torso) ---- */
-      limb(-3, 0, thighFar, 15, kneeFar, 14, 8, 6.5, pantsFar, "shoe");
-      limb(-9, -22, armFar, 11, elbowFar, 10, 6, 5, shirtFar, "hand");
-
-      /* ---- torso: shirt from hips to shoulders ---- */
-      ctx.fillStyle = shirt;
-      ctx.beginPath();
-      ctx.moveTo(-10, 3);
-      ctx.quadraticCurveTo(-13, -11, -11, -21);
-      ctx.lineTo(11, -21);
-      ctx.quadraticCurveTo(13, -11, 10, 3);
-      ctx.quadraticCurveTo(0, 6, -10, 3);
-      ctx.closePath();
-      ctx.fill();
-      // far-side shading
-      ctx.fillStyle = "rgba(0,0,0,0.10)";
-      ctx.beginPath();
-      ctx.moveTo(4, -20);
-      ctx.quadraticCurveTo(8, -11, 6, 3);
-      ctx.lineTo(10, 3);
-      ctx.quadraticCurveTo(13, -11, 11, -21);
-      ctx.closePath();
-      ctx.fill();
-      // collar band where the neck meets the shirt
-      ctx.fillStyle = shirt;
-      ctx.beginPath();
-      ctx.ellipse(0, -20, 6.5, 3, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      /* ---- near side of the body (in front of the torso) ---- */
-      limb(3, 0, thighNear, 15, kneeNear, 14, 8.5, 7, pants, "shoe");
-      limb(9, -22, armNear, 11, elbowNear, 10, 6.5, 5.5, shirt, "hand");
-
-      /* ---- head photo on top (covers the collar seam) ---- */
-      const hw = 28;
-      const hh = hw / 0.809; // ≈ 35 — head + neck, aspect of runner-head.png
-      ctx.drawImage(img, -hw / 2, -18 - hh, hw, hh);
-
+      // draw sprite frame: feet at y=0, centered horizontally
+      ctx.drawImage(sprite, srcX, srcY, srcW, srcH, -drawW / 2, -drawH, drawW, drawH);
       ctx.restore();
     }
 

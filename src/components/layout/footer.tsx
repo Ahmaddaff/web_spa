@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUp, Lock } from "lucide-react";
 
@@ -27,12 +28,13 @@ export function Footer() {
         <div className="grid gap-8 md:grid-cols-3">
           <div>
             <Link href="#home" className="flex items-center gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-400 to-violet-600 font-display text-sm font-bold text-white">
-                {profile.initials}
-              </span>
-              <span className="font-display text-base font-semibold text-slate-200">
-                {profile.name}
-              </span>
+              <Image
+                src="/images/ahdaverse-logo.png"
+                alt="AHDAVERSE"
+                width={140}
+                height={32}
+                className="h-8 w-auto opacity-95 transition hover:opacity-100"
+              />
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-500">
               {profile.title} — {profile.location}
@@ -87,14 +89,10 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-white/5 pt-6 sm:flex-row">
-          <p className="text-xs text-slate-600">
+        <div className="mt-10 flex flex-col items-center justify-center gap-3 border-t border-white/5 pt-6 sm:flex-row sm:gap-6">
+          <p className="text-center text-xs text-slate-600">
             &copy; {new Date().getFullYear()} {profile.name}. All rights
             reserved.
-          </p>
-          <p className="text-xs text-slate-600">
-            Built with Next.js, Tailwind CSS, Framer Motion &amp; React Three
-            Fiber.
           </p>
           <a
             href="#home"
