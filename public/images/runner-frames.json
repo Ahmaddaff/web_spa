@@ -3,6 +3,7 @@
   "totalHeight": 672,
   "frameWidth": 198,
   "numFrames": 8,
+  "note": "Frame 0 is clipped by its cell in the source art and is not used in the run cycle. Stray objects and neighbour slivers were removed from the sheet, so these rects differ from the original extraction.",
   "frames": [
     {
       "x": 87,
@@ -24,15 +25,15 @@
     },
     {
       "x": 0,
-      "y": 140,
+      "y": 193,
       "w": 198,
-      "h": 414
+      "h": 361
     },
     {
       "x": 0,
       "y": 123,
       "w": 198,
-      "h": 508
+      "h": 421
     },
     {
       "x": 0,

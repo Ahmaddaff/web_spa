@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { PointerEvent as RPointerEvent } from "react";
 import { motion } from "framer-motion";
 
 import { SectionHeading } from "@/components/section-heading";
@@ -116,20 +117,23 @@ export function Minigame() {
     };
   }, []);
 
-  /* sprite sheet frame metadata (matching runner-frames.json) */
+  /* frame rects measured from the sprite sheet's alpha channel (strays and
+     neighbour slivers removed). Frame 0 is clipped by its own cell in the
+     source art, so it is not used in the run cycle. */
   const FRAMES = useRef([
-    { x: 87, y: 172, w: 111, h: 460 }, // 0: running
+    { x: 87, y: 172, w: 111, h: 460 }, // 0: clipped in the source art — unused
     { x: 0, y: 187, w: 198, h: 445 },  // 1: running
     { x: 0, y: 191, w: 198, h: 441 },  // 2: running
-    { x: 0, y: 140, w: 198, h: 414 },  // 3: JUMP (legs tucked, mid-air)
-    { x: 0, y: 123, w: 198, h: 508 },  // 4: running (tallest)
+    { x: 0, y: 193, w: 198, h: 361 },  // 3: JUMP (legs tucked, mid-air)
+    { x: 0, y: 123, w: 198, h: 421 },  // 4: running
     { x: 0, y: 177, w: 198, h: 429 },  // 5: running
     { x: 0, y: 226, w: 198, h: 405 },  // 6: running
     { x: 0, y: 187, w: 149, h: 444 },  // 7: running
   ]).current;
   const FRAME_W = 198; // each frame is 198px wide in the sprite sheet
-  const RUN_FRAMES = [0, 1, 2, 4, 5, 6, 7]; // skip 3 (jump) for ground cycle
-  const CHAR_TARGET_H = 92; // game character target height in px
+  const RUN_FRAMES = [1, 2, 4, 5, 6, 7]; // ground cycle (0 is clipped, 3 is the jump)
+  const CHAR_TARGET_H = 92; // height of the tallest run frame on screen
+  const REF_H = 445; // that frame's height in the sheet — keeps the scale constant
 
   /* ---------- sizing ---------- */
   useEffect(() => {
@@ -613,7 +617,10 @@ export function Minigame() {
         frameIndex = RUN_FRAMES[cyclePos];
       }
       const fm = FRAMES[frameIndex];
-      const scale = CHAR_TARGET_H / fm.h;
+      // one constant scale for every frame: normalising each frame to the same
+      // height made the runner visibly pulse, because the frame rects differ in
+      // height by up to 10%
+      const scale = CHAR_TARGET_H / REF_H;
       const drawW = fm.w * scale;
       const drawH = fm.h * scale;
       // source rect in the sprite sheet
@@ -626,6 +633,10 @@ export function Minigame() {
       ctx.translate(cx + cw / 2, feetY + bob);
       ctx.rotate(lean);
       if (flash) ctx.globalAlpha = 0.35;
+      // soft rim light: the outfit is near-black and would otherwise vanish
+      // against the near-black background
+      ctx.shadowColor = "rgba(34,211,238,0.55)";
+      ctx.shadowBlur = 14;
       // draw sprite frame: feet at y=0, centered horizontally
       ctx.drawImage(sprite, srcX, srcY, srcW, srcH, -drawW / 2, -drawH, drawW, drawH);
       ctx.restore();
@@ -687,6 +698,9 @@ export function Minigame() {
         if (s.inView) {
           if (phaseRef.current === "playing") {
             update(dt);
+            // the run must repaint every frame — without this the canvas keeps
+            // showing the last "ready" frame while the state advances silently
+            render(ts);
           } else if (phaseRef.current === "win" || phaseRef.current === "over") {
             updateParticles(dt);
             render(ts);
@@ -744,13 +758,14 @@ export function Minigame() {
       { threshold: 0.15 }
     );
     io.observe(wrap);
+    // `inView` belongs to the IntersectionObserver — this handler must only
+    // pause/resume the loop. Clobbering `inView` here used to freeze the canvas
+    // for good: on returning to the tab the loop restarted with inView === false
+    // and did nothing, and the observer never fires again while the section
+    // stays in view.
     const onVis = () => {
-      if (document.hidden) {
-        g.current.inView = false;
-        loopCtl.current.stop();
-      } else {
-        loopCtl.current.start();
-      }
+      if (document.hidden) loopCtl.current.stop();
+      else if (g.current.inView) loopCtl.current.start();
     };
     document.addEventListener("visibilitychange", onVis);
     return () => {
@@ -775,12 +790,30 @@ export function Minigame() {
     return () => window.removeEventListener("keydown", onKey);
   }, [resetGame, jump]);
 
-  const onPointer = () => {
-    if (phaseRef.current === "ready" || phaseRef.current === "over" || phaseRef.current === "win") {
-      resetGame();
-    } else {
+  /* ---------- pointer input ----------
+   * During a run a press jumps straight away (must feel instant). Otherwise a
+   * press only *arms* a restart, which fires on release and only when the
+   * pointer barely moved — on a phone a vertical swipe across the canvas has to
+   * scroll the page instead of starting the game. Taps that land on a button
+   * are left to that button. */
+  const pressRef = useRef<{ x: number; y: number; t: number } | null>(null);
+
+  const onPointerDown = (e: RPointerEvent<HTMLElement>) => {
+    if (phaseRef.current === "playing") {
       jump();
+      return;
     }
+    pressRef.current = { x: e.clientX, y: e.clientY, t: Date.now() };
+  };
+
+  const onPointerUp = (e: RPointerEvent<HTMLElement>) => {
+    const p = pressRef.current;
+    pressRef.current = null;
+    if (!p || phaseRef.current === "playing") return;
+    if (e.target instanceof Element && e.target.closest("button")) return;
+    const moved = Math.hypot(e.clientX - p.x, e.clientY - p.y);
+    if (moved > 12 || Date.now() - p.t > 700) return; // that was a scroll, not a tap
+    resetGame();
   };
 
   const goContact = () => {
@@ -811,14 +844,16 @@ export function Minigame() {
         >
           <canvas
             ref={canvasRef}
-            onPointerDown={onPointer}
+            onPointerDown={onPointerDown}
+            onPointerUp={onPointerUp}
             className="block h-[380px] w-full touch-pan-y select-none sm:h-[460px]"
           />
 
           {/* overlays */}
           {phase === "ready" && (
             <div
-              onPointerDown={onPointer}
+              onPointerDown={onPointerDown}
+              onPointerUp={onPointerUp}
               className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center gap-3 bg-[#0b0b14]/80 backdrop-blur-sm"
             >
               <p className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
