@@ -13,7 +13,8 @@ import { useUnlock } from "@/components/providers/unlock-provider";
  *  Auto-run, jump over bugs, grab chips. Four zones:
  *  ABOUT → SKILLS → EXPERIENCE → CONTACT.
  *  Winning the game unlocks the About / Skills / Experience / Projects
- *  sections (persisted in localStorage).
+ *  sections. The unlock lives in memory only, so a refresh locks the site
+ *  again and the game has to be won once more.
  * ------------------------------------------------------------------ */
 
 type Phase = "ready" | "playing" | "over" | "win";
