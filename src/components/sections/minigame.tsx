@@ -117,23 +117,20 @@ export function Minigame() {
     };
   }, []);
 
-  /* frame rects measured from the sprite sheet's alpha channel (strays and
-     neighbour slivers removed). Frame 0 is clipped by its own cell in the
-     source art, so it is not used in the run cycle. */
-  const FRAMES = useRef([
-    { x: 87, y: 172, w: 111, h: 460 }, // 0: clipped in the source art — unused
-    { x: 0, y: 187, w: 198, h: 445 },  // 1: running
-    { x: 0, y: 191, w: 198, h: 441 },  // 2: running
-    { x: 0, y: 193, w: 198, h: 361 },  // 3: JUMP (legs tucked, mid-air)
-    { x: 0, y: 123, w: 198, h: 421 },  // 4: running
-    { x: 0, y: 177, w: 198, h: 429 },  // 5: running
-    { x: 0, y: 226, w: 198, h: 405 },  // 6: running
-    { x: 0, y: 187, w: 149, h: 444 },  // 7: running
-  ]).current;
-  const FRAME_W = 198; // each frame is 198px wide in the sprite sheet
-  const RUN_FRAMES = [1, 2, 4, 5, 6, 7]; // ground cycle (0 is clipped, 3 is the jump)
-  const CHAR_TARGET_H = 92; // height of the tallest run frame on screen
-  const REF_H = 445; // that frame's height in the sheet — keeps the scale constant
+  /* The sheet holds exactly 7 figures in 266x480 cells. Each one was cut out
+     with alpha connected-component labelling, so a cell can only ever contain
+     its own character — the old 198px grid sliced straight through the art and
+     dragged slices of the neighbouring poses into every frame.
+     All cells share the same anchor: head centre at x = HEAD_X, feet on the
+     baseline at y = FEET_Y, so frames never jump around while cycling. */
+  const CELL_W = 266;
+  const CELL_H = 480;
+  const HEAD_X = 162; // head centre inside every cell
+  const FEET_Y = 470; // baseline inside every cell
+  const RUN_FRAMES = [0, 1, 2, 4, 5, 6]; // ground cycle
+  const JUMP_FRAME = 3; // airborne stride
+  const CHAR_TARGET_H = 92; // tallest figure on screen
+  const REF_H = 460; // tallest figure in the sheet — one constant scale
 
   /* ---------- sizing ---------- */
   useEffect(() => {
@@ -609,25 +606,12 @@ export function Minigame() {
       ctx.globalAlpha = 1;
 
       // select frame: jump frame when airborne, otherwise cycle ground frames
-      let frameIndex: number;
-      if (!grounded) {
-        frameIndex = 3; // jump frame (legs tucked)
-      } else {
-        const cyclePos = Math.floor(runPhase) % RUN_FRAMES.length;
-        frameIndex = RUN_FRAMES[cyclePos];
-      }
-      const fm = FRAMES[frameIndex];
+      const frameIndex = grounded
+        ? RUN_FRAMES[Math.floor(runPhase) % RUN_FRAMES.length]
+        : JUMP_FRAME;
       // one constant scale for every frame: normalising each frame to the same
-      // height made the runner visibly pulse, because the frame rects differ in
-      // height by up to 10%
+      // height made the runner visibly pulse
       const scale = CHAR_TARGET_H / REF_H;
-      const drawW = fm.w * scale;
-      const drawH = fm.h * scale;
-      // source rect in the sprite sheet
-      const srcX = frameIndex * FRAME_W + fm.x;
-      const srcY = fm.y;
-      const srcW = fm.w;
-      const srcH = fm.h;
 
       ctx.save();
       ctx.translate(cx + cw / 2, feetY + bob);
@@ -637,8 +621,21 @@ export function Minigame() {
       // against the near-black background
       ctx.shadowColor = "rgba(34,211,238,0.55)";
       ctx.shadowBlur = 14;
-      // draw sprite frame: feet at y=0, centered horizontally
-      ctx.drawImage(sprite, srcX, srcY, srcW, srcH, -drawW / 2, -drawH, drawW, drawH);
+      // Draw the whole cell rather than a tight crop, anchored so that the head
+      // sits on the pivot and the feet sit on the ground line. Because every
+      // cell carries the same anchor there is nothing to clip and nothing from
+      // a neighbouring cell can ever appear.
+      ctx.drawImage(
+        sprite,
+        frameIndex * CELL_W,
+        0,
+        CELL_W,
+        CELL_H,
+        -HEAD_X * scale,
+        -FEET_Y * scale,
+        CELL_W * scale,
+        CELL_H * scale
+      );
       ctx.restore();
     }
 

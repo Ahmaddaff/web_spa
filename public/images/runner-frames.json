@@ -1,57 +1,24 @@
 {
-  "totalWidth": 1584,
-  "totalHeight": 672,
-  "frameWidth": 198,
-  "numFrames": 8,
-  "note": "Frame 0 is clipped by its cell in the source art and is not used in the run cycle. Stray objects and neighbour slivers were removed from the sheet, so these rects differ from the original extraction.",
+  "totalWidth": 1862,
+  "totalHeight": 480,
+  "frameWidth": 266,
+  "frameHeight": 480,
+  "numFrames": 7,
+  "anchor": {
+    "headX": 162,
+    "feetY": 470,
+    "note": "Every cell shares this anchor: the head centre sits at x=162 and the feet rest on the baseline y=470, so frames never shift while cycling."
+  },
+  "runFrames": [0, 1, 2, 4, 5, 6],
+  "jumpFrame": 3,
+  "note": "The source sheet contains exactly 7 figures, not 8. They were cut out with alpha connected-component labelling, so a cell can only contain its own character — the old 198px grid sliced through the artwork and pulled slices of neighbouring poses into every frame.",
   "frames": [
-    {
-      "x": 87,
-      "y": 172,
-      "w": 111,
-      "h": 460
-    },
-    {
-      "x": 0,
-      "y": 187,
-      "w": 198,
-      "h": 445
-    },
-    {
-      "x": 0,
-      "y": 191,
-      "w": 198,
-      "h": 441
-    },
-    {
-      "x": 0,
-      "y": 193,
-      "w": 198,
-      "h": 361
-    },
-    {
-      "x": 0,
-      "y": 123,
-      "w": 198,
-      "h": 421
-    },
-    {
-      "x": 0,
-      "y": 177,
-      "w": 198,
-      "h": 429
-    },
-    {
-      "x": 0,
-      "y": 226,
-      "w": 198,
-      "h": 405
-    },
-    {
-      "x": 0,
-      "y": 187,
-      "w": 149,
-      "h": 444
-    }
+    { "index": 0, "x": 103, "y": 10, "w": 130, "h": 460, "pose": "run" },
+    { "index": 1, "x": 14, "y": 25, "w": 224, "h": 445, "pose": "run" },
+    { "index": 2, "x": 10, "y": 30, "w": 230, "h": 440, "pose": "run" },
+    { "index": 3, "x": 12, "y": 48, "w": 244, "h": 422, "pose": "jump" },
+    { "index": 4, "x": 52, "y": 41, "w": 192, "h": 429, "pose": "run" },
+    { "index": 5, "x": 36, "y": 65, "w": 214, "h": 405, "pose": "run" },
+    { "index": 6, "x": 45, "y": 25, "w": 204, "h": 445, "pose": "run" }
   ]
 }

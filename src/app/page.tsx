@@ -17,7 +17,9 @@ import { Footer } from "@/components/layout/footer";
 export default function Home() {
   return (
     <UnlockProvider>
-      <main className="relative min-h-screen overflow-x-hidden">
+      {/* the page shell owns the base colour so no section can ever expose the
+          browser's white canvas through a gap, a repaint or a scroll jump */}
+      <main className="relative min-h-screen overflow-x-hidden bg-background">
         <Preloader />
         <GridBackground />
         <Navbar />

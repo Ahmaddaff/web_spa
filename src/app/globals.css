@@ -31,10 +31,19 @@
 
   html {
     scroll-behavior: smooth;
+    /* The page canvas is painted from the root element. Without a background
+       here, anything the body does not cover — overscroll rubber-banding,
+       a dropped WebGL layer, a repaint during a scroll jump — shows the
+       browser's default white canvas. */
+    background-color: hsl(var(--background));
+    min-height: 100%;
+    /* stop the overscroll bounce from dragging the white canvas into view */
+    overscroll-behavior-y: none;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    min-height: 100vh;
   }
 
   ::selection {
