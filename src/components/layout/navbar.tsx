@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
-import { Download, Lock, Menu, X } from "lucide-react";
+import { Download, Menu, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { navLinks, profile } from "@/data/site-data";
@@ -31,23 +31,17 @@ export function Navbar() {
     () => (unlocked ? ALL_IDS : OPEN_IDS),
     [unlocked]
   );
+  // the gated pages do not exist until the game is won, so they are not in
+  // the navigation either — no dead links, no lock buttons
+  const links = useMemo(
+    () =>
+      unlocked
+        ? navLinks
+        : navLinks.filter((link) => !LOCKED_HREFS.includes(link.href)),
+    [unlocked]
+  );
   const active = useScrollSpy(spyIds);
   const { scrollYProgress } = useScroll();
-  const [toast, setToast] = useState<string | null>(null);
-  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(
-    () => () => {
-      if (toastTimer.current) clearTimeout(toastTimer.current);
-    },
-    []
-  );
-
-  const showLockedToast = (label: string) => {
-    setToast(`"${label}" terkunci — menangkan AHDAVERSE RUNNER untuk membukanya`);
-    if (toastTimer.current) clearTimeout(toastTimer.current);
-    toastTimer.current = setTimeout(() => setToast(null), 3200);
-  };
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#0a0a0a]/80 backdrop-blur-xl">
@@ -64,22 +58,7 @@ export function Navbar() {
         </Link>
 
         <ul className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => {
-            const isLocked = !unlocked && LOCKED_HREFS.includes(link.href);
-            if (isLocked) {
-              return (
-                <li key={link.href}>
-                  <button
-                    type="button"
-                    onClick={() => showLockedToast(link.label)}
-                    className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-400"
-                  >
-                    <Lock className="h-3 w-3" />
-                    {link.label}
-                  </button>
-                </li>
-              );
-            }
+          {links.map((link) => {
             const isActive = active === link.href.slice(1);
             return (
               <li key={link.href}>
@@ -131,20 +110,7 @@ export function Navbar() {
         className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-gradient-to-r from-cyan-400 via-sky-400 to-violet-500 shadow-[0_0_8px_rgba(34,211,238,0.6)]"
       />
 
-      {/* locked-section hint toast */}
-      <AnimatePresence>
-        {toast ? (
-          <motion.div
-            initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.2 }}
-            className="absolute left-1/2 top-full z-10 mt-2 max-w-[90vw] -translate-x-1/2 whitespace-nowrap rounded-full border border-cyan-400/30 bg-[#0a0a0a]/95 px-4 py-2 font-mono text-[11px] text-cyan-200 shadow-[0_0_24px_rgba(34,211,238,0.15)] backdrop-blur"
-          >
-            {toast}
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+      {/* mobile menu */}
 
       <AnimatePresence>
         {open ? (
@@ -156,25 +122,7 @@ export function Navbar() {
             className="overflow-hidden border-b border-white/10 bg-[#0a0a0a]/95 backdrop-blur-xl md:hidden"
           >
             <ul className="container flex flex-col gap-1 py-4">
-              {navLinks.map((link) => {
-                const isLocked = !unlocked && LOCKED_HREFS.includes(link.href);
-                if (isLocked) {
-                  return (
-                    <li key={link.href}>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setOpen(false);
-                          showLockedToast(link.label);
-                        }}
-                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-slate-600 transition hover:bg-white/5 hover:text-slate-400"
-                      >
-                        <Lock className="h-3.5 w-3.5" />
-                        {link.label}
-                      </button>
-                    </li>
-                  );
-                }
+              {links.map((link) => {
                 return (
                   <li key={link.href}>
                     <Link

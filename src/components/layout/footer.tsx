@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUp, Lock } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 
 import { navLinks, profile, socials } from "@/data/site-data";
 import { useUnlock } from "@/components/providers/unlock-provider";
@@ -11,6 +11,10 @@ const LOCKED_HREFS = ["#about", "#skills", "#experience", "#projects"];
 
 export function Footer() {
   const { unlocked } = useUnlock();
+  // pages still sealed behind the game are not listed at all
+  const links = unlocked
+    ? navLinks
+    : navLinks.filter((link) => !LOCKED_HREFS.includes(link.href));
 
   return (
     <footer className="relative border-t border-white/10 bg-[#070707]">
@@ -48,23 +52,17 @@ export function Footer() {
           <div>
             <h4 className="text-sm font-semibold text-slate-200">Navigasi</h4>
             <ul className="mt-4 grid grid-cols-2 gap-2 text-sm">
-              {navLinks.map((link) => {
-                const isLocked = !unlocked && LOCKED_HREFS.includes(link.href);
-                return (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      data-cursor="GO"
-                      className={`inline-flex items-center gap-1.5 transition hover:text-cyan-300 ${
-                        isLocked ? "text-slate-700" : "text-slate-500"
-                      }`}
-                    >
-                      {isLocked ? <Lock className="h-3 w-3" /> : null}
-                      {link.label}
-                    </Link>
-                  </li>
-                );
-              })}
+              {links.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    data-cursor="GO"
+                    className="inline-flex items-center gap-1.5 text-slate-500 transition hover:text-cyan-300"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

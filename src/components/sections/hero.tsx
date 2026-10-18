@@ -16,6 +16,7 @@ import { LaptopHologram } from "@/components/effects/laptop-hologram";
 import { PhotoAmbience, PhotoAmbienceSweep } from "@/components/effects/photo-ambience";
 import { HeroScene } from "@/components/three/hero-scene";
 import { profile, socials } from "@/data/site-data";
+import { useUnlock } from "@/components/providers/unlock-provider";
 
 const floatingChips = [
   { label: "React", className: "left-1 top-10 lg:-left-12" },
@@ -25,6 +26,7 @@ const floatingChips = [
 ];
 
 export function Hero() {
+  const { unlocked } = useUnlock();
   // mouse parallax — the portrait drifts gently against the cursor
   const parallaxX = useMotionValue(0);
   const parallaxY = useMotionValue(0);
@@ -141,8 +143,13 @@ export function Hero() {
           >
             <MagneticButton>
               <Button asChild size="lg">
-                <a href="#projects" data-cursor="WORK">
-                  View Work
+                {/* while the gate is shut there is no work section to jump to,
+                    so the primary CTA leads into the game instead */}
+                <a
+                  href={unlocked ? "#projects" : "#minigame"}
+                  data-cursor={unlocked ? "WORK" : "PLAY"}
+                >
+                  {unlocked ? "View Work" : "Play Game"}
                   <ArrowRight className="h-4 w-4" />
                 </a>
               </Button>
