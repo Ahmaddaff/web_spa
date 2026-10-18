@@ -35,7 +35,7 @@ export function About() {
     >
       <div className="container">
         <SectionHeading
-          index="01"
+          index="03"
           eyebrow=".about()"
           title="Student, Builder, and Leader"
           description="Mahasiswa Teknologi Informasi Universitas Amikom Purwokerto dengan minat besar pada web development, IoT, dan kepemimpinan organisasi."

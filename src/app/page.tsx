@@ -25,8 +25,10 @@ export default function Home() {
         <Navbar />
         <Hero />
         <TechMarquee />
-        <GatedSections />
+        {/* the game is the second page: it has to be reached before anything
+            it guards, and the guarded sections stay sealed until it is won */}
         <Minigame />
+        <GatedSections />
         <StatementMarquee />
         <Contact />
         <Footer />

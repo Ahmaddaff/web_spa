@@ -8,45 +8,20 @@ import { Skills } from "./skills";
 import { useUnlock } from "@/components/providers/unlock-provider";
 import { ErrorBoundary } from "@/components/error-boundary";
 
+/* Only the anchor and the position number are public while the gate is shut.
+   No title, no eyebrow, no description — the real copy lives in the section
+   components and only mounts once the game is won. */
 const LOCKED_META = [
-  {
-    id: "about",
-    index: "01",
-    eyebrow: ".about()",
-    title: "Student, Builder, and Leader",
-    description:
-      "Mahasiswa Teknologi Informasi Universitas Amikom Purwokerto dengan minat besar pada web development, IoT, dan kepemimpinan organisasi.",
-  },
-  {
-    id: "skills",
-    index: "02",
-    eyebrow: ".skills()",
-    title: "Tools I Work With",
-    description:
-      "Kombinasi kemampuan teknis dan soft skills yang saya asah melalui perkuliahan, proyek, dan pengalaman organisasi.",
-  },
-  {
-    id: "experience",
-    index: "03",
-    eyebrow: ".experience()",
-    title: "Leadership & Organization Journey",
-    description:
-      "Perjalanan organisasi, kepanitiaan, dan kepemimpinan yang membentuk cara saya bekerja, berkolaborasi, dan memberi dampak.",
-  },
-  {
-    id: "projects",
-    index: "04",
-    eyebrow: ".projects()",
-    title: "Selected Work & Publications",
-    description:
-      "Proyek teknologi dan publikasi ilmiah yang saya bangun — dari perangkat IoT dan aplikasi web hingga jurnal yang sudah diterbitkan.",
-  },
+  { id: "about", index: "03" },
+  { id: "skills", index: "04" },
+  { id: "experience", index: "05" },
+  { id: "projects", index: "06" },
 ];
 
 /**
- * Journey: Home (halaman utama) → Play (minigame) → Contact (halaman
- * terakhir). About / Skills / Experience / Projects unlock only after the
- * minigame is won.
+ * Journey: Home (halaman utama) → Play (minigame, halaman kedua) → About /
+ * Skills / Experience / Projects → Contact. Everything after Play is sealed
+ * and its content stays hidden until the minigame is won.
  */
 export function GatedSections() {
   const { unlocked } = useUnlock();

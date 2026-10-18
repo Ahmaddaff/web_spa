@@ -47,7 +47,7 @@ export function Projects() {
     >
       <div className="container">
         <SectionHeading
-          index="04"
+          index="06"
           eyebrow=".projects()"
           title="Selected Work & Publications"
           description="Proyek teknologi dan publikasi ilmiah yang saya bangun — dari perangkat IoT dan aplikasi web hingga jurnal yang sudah diterbitkan."

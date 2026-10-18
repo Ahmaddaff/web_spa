@@ -841,10 +841,10 @@ export function Minigame() {
       className="relative px-6 py-24"
     >
       <SectionHeading
-        index="06"
+        index="02"
         eyebrow=".play()"
         title="Minigame"
-        description="Bantu Dafanda berlari melewati zona About, Skills, Experience, sampai Contact. Lompati bug-nya, kumpulkan chip-nya — menangkan game ini untuk membuka section yang masih terkunci."
+        description="Bantu Dafanda berlari, lompati bug-nya, kumpulkan chip-nya. Menangkan game ini untuk membuka bagian halaman yang masih dirahasiakan."
       />
 
       <div className="relative mx-auto mt-12 max-w-5xl">
@@ -879,7 +879,7 @@ export function Minigame() {
               </p>
               {!unlocked && (
                 <p className="mt-1 rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-1.5 text-center font-mono text-[11px] text-violet-200">
-                  Menangkan untuk membuka About · Skills · Experience · Projects
+                  Menangkan untuk membuka bagian yang masih dirahasiakan
                 </p>
               )}
             </div>
@@ -911,7 +911,7 @@ export function Minigame() {
                 SCORE {g.current.score} · BEST {best}
               </p>
               <p className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1.5 font-mono text-[11px] text-cyan-200">
-                ✓ Semua section sudah terbuka
+                ✓ Semua bagian rahasia sudah terbuka
               </p>
               <button
                 onClick={goContact}
