@@ -343,6 +343,12 @@ export function Minigame() {
     const charW = 56;
     const charH = 92;
     const cx = s.w * 0.16;
+    const charCx = cx + charW / 2; // character centre, screen space
+    // Character and chips are both measured from the canvas bottom: the feet
+    // rest on the ground line at GROUND_H, so the centre sits GROUND_H + charY
+    // + charH/2 above the bottom. c.y is already in that same space.
+    const charCy = GROUND_H + s.charY + charH / 2;
+    const step = s.speed * f; // how far the world scrolled this frame
     const cyTop = s.h - GROUND_H - s.charY - charH;
     const cx0 = cx + 10;
     const cx1 = cx + charW - 10;
@@ -368,9 +374,15 @@ export function Minigame() {
     for (const c of s.chips) {
       if (c.taken) continue;
       const px = c.x - s.camX;
-      // vertical distance in above-ground terms: character center vs chip
-      const dy = Math.abs(s.charY + 46 - c.y);
-      if (Math.abs(px - cx) < 44 && dy < 56) {
+      // This used to read `Math.abs(s.charY + 46 - c.y)`, which forgot that
+      // c.y is measured from the canvas bottom while charY is measured from
+      // the ground line — the whole pickup band sat GROUND_H (64px) too low,
+      // so chips were passed straight through without scoring.
+      const dy = Math.abs(charCy - c.y);
+      // swept test: the chip travels `step` px this frame, so check the
+      // interval it crossed rather than a single sample point
+      const overlapsX = px + step > charCx - 44 && px < charCx + 44;
+      if (overlapsX && dy < 58) {
         c.taken = true;
         s.score += 10;
         spawnBurst(px, s.h - c.y, "#22d3ee", 8);
@@ -568,9 +580,11 @@ export function Minigame() {
       ctx.restore();
     }
 
-    // character — sprite sheet frames (8 frames, transparent bg, smooth cycle)
+    // character — sprite sheet frames (7 frames, transparent bg, smooth cycle)
     const sprite = spriteRef.current;
-    const cw = 62; // collision box width (used for game logic)
+    // same width the collision code uses, so the sprite sits exactly where the
+    // pickup and hit boxes are
+    const cw = 56;
     const ch = CHAR_TARGET_H; // visual height
     const cx = w * 0.16;
     const grounded = s.grounded;
