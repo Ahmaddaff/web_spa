@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, useAnimate } from "framer-motion";
 
 const BRAND_MARK = "/images/ahdaverse-mark.png";
-const BASE = 64; // base size (px) of the flying logo — matches its on-screen box
 
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(false);
@@ -16,10 +15,10 @@ function usePrefersReducedMotion() {
 }
 
 /**
- * AHDAVERSE intro: the brand mark + wordmark appear, the mark spins and
- * zooms in until it fills the screen, then zooms back out to the navbar logo
- * in the top-left corner — landing exactly on it — and the curtain fades to
- * reveal page 1 (Hero). On reduced-motion it just fades through quickly.
+ * AHDAVERSE intro — intentionally calm.
+ * The brand mark eases in (soft scale + fade), the wordmark follows, a thin
+ * gradient progress line fills, then the whole curtain fades to reveal page 1.
+ * No spin, no full-screen zoom, no fly-to-corner — just a quiet, clean reveal.
  */
 export function Preloader() {
   const [done, setDone] = useState(false);
@@ -33,84 +32,14 @@ export function Preloader() {
 
   useEffect(() => {
     if (reduced) {
-      const t = setTimeout(() => setDone(true), 600);
+      const t = setTimeout(() => setDone(true), 400);
       return () => clearTimeout(t);
     }
     let cancelled = false;
     (async () => {
-      // wait two frames so the navbar (landing target) is laid out
-      await new Promise((r) =>
-        requestAnimationFrame(() => requestAnimationFrame(r))
-      );
-
-      const logoEl = document.querySelector<HTMLElement>("[data-p-logo]");
-      const markEl = document.querySelector<HTMLElement>("[data-nav-mark]");
-      let target = { scale: 1, x: 0, y: 0 };
-      if (logoEl && markEl) {
-        const lr = logoEl.getBoundingClientRect();
-        const mr = markEl.getBoundingClientRect();
-        const lcx = (lr.left + lr.right) / 2;
-        const lcy = (lr.top + lr.bottom) / 2;
-        const mcx = (mr.left + mr.right) / 2;
-        const mcy = (mr.top + mr.bottom) / 2;
-        target = {
-          scale: mr.width / lr.width,
-          x: mcx - lcx,
-          y: mcy - lcy,
-        };
-      }
-      // scale that makes the brand mark dominate the whole viewport
-      const cover =
-        (Math.max(window.innerWidth, window.innerHeight) / BASE) * 1.3;
-
-      // arc the flight into the corner so the path is non-linear and abstract
-      // (perpendicular bulge off the straight line from screen center to target)
-      const dist = Math.hypot(target.x, target.y) || 1;
-      const px = -target.y / dist;
-      const py = target.x / dist;
-      const bulge = 0.18 * dist;
-      const midX = target.x * 0.5 + px * bulge;
-      const midY = target.y * 0.5 + py * bulge;
-
-      await animate(
-        "[data-p-word]",
-        { opacity: [0, 1], y: [16, 0] },
-        { duration: 0.5, ease: "easeOut" }
-      );
-      await animate(
-        "[data-p-logo]",
-        { opacity: [0, 1], scale: [0.65, 1] },
-        { duration: 0.55, ease: "easeOut" }
-      );
-      await new Promise((r) => setTimeout(r, 220));
-
-      // zoom IN — spin + scale until it covers the screen
-      await animate(
-        "[data-p-logo]",
-        { scale: cover, rotate: 360 },
-        { duration: 0.95, ease: [0.66, 0, 0.34, 1] }
-      );
-      // wordmark fades as the mark takes over (runs in parallel)
-      animate(
-        "[data-p-word]",
-        { opacity: 0, scale: 1.5 },
-        { duration: 0.45, ease: "easeIn" }
-      );
-
-      // zoom OUT — shrink to the navbar mark size and fly into the corner
-      // along a curved (abstract) arc so the path never reads as "cheesy"
-      await animate(
-        "[data-p-logo]",
-        {
-          scale: [cover, target.scale],
-          x: [0, midX, target.x],
-          y: [0, midY, target.y],
-          rotate: [360, 720],
-        },
-        { duration: 0.95, ease: [0.7, 0, 0.18, 1] }
-      );
-
-      // open page 1 — fade the curtain away
+      // let the entrance + progress line play (~1.1s)
+      await new Promise((r) => setTimeout(r, 1100));
+      // gentle fade of the whole curtain
       await animate(scope.current, { opacity: 0 }, { duration: 0.5, ease: "easeOut" });
       if (!cancelled) setDone(true);
     })();
@@ -124,12 +53,19 @@ export function Preloader() {
   return (
     <div
       ref={scope}
-      className="fixed inset-0 z-[200] flex flex-col items-center justify-center gap-6 overflow-hidden bg-[#0a0a0a]"
+      className="fixed inset-0 z-[200] flex flex-col items-center justify-center gap-7 bg-[#0a0a0a]"
     >
+      {/* soft halo behind the mark */}
       <div
-        data-p-logo
-        className="relative h-16 w-16 opacity-0 will-change-transform"
-        style={{ transformOrigin: "center" }}
+        aria-hidden="true"
+        className="pointer-events-none absolute h-64 w-64 rounded-full bg-[radial-gradient(closest-side,rgba(34,211,238,0.18),rgba(139,92,246,0.12),transparent_72%)] blur-2xl"
+      />
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.92 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="relative h-16 w-16"
       >
         <Image
           src={BRAND_MARK}
@@ -137,16 +73,28 @@ export function Preloader() {
           fill
           priority
           sizes="64px"
-          className="relative z-10 object-contain"
+          className="object-contain"
         />
-      </div>
+      </motion.div>
 
-      <span
-        data-p-word
-        className="pointer-events-none select-none font-display text-2xl font-extrabold tracking-[0.4em] text-gradient opacity-0 sm:text-3xl"
+      <motion.span
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+        className="font-display text-lg font-extrabold tracking-[0.45em] text-gradient sm:text-xl"
       >
         AHDAVERSE
-      </span>
+      </motion.span>
+
+      {/* thin progress line */}
+      <div className="h-px w-40 overflow-hidden rounded-full bg-white/10">
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1.0, delay: 0.25, ease: "easeInOut" }}
+          className="h-full origin-left bg-gradient-to-r from-cyan-400 to-violet-500"
+        />
+      </div>
     </div>
   );
 }
