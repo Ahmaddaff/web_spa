@@ -96,6 +96,7 @@ export function About() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5, delay: 0.1 }}
+            className="flex h-full flex-col"
           >
             <div className="mb-3 inline-flex items-center gap-2 rounded-md border border-white/10 bg-black/30 px-2.5 py-1 font-mono text-[11px] text-slate-500">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
@@ -131,8 +132,8 @@ export function About() {
               ))}
             </div>
 
-            {/* focus areas — fills the space below the stats */}
-            <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+            {/* focus areas — pinned to the bottom so it lines up with the left card */}
+            <div className="mt-auto rounded-2xl border border-white/10 bg-white/[0.02] p-4">
               <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-slate-600">
                 // focus areas
               </p>
