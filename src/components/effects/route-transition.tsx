@@ -108,7 +108,7 @@ export function RouteTransition() {
       {phase !== "idle" ? (
         <motion.div
           key="route-overlay"
-          className="fixed inset-0 z-[97] flex items-center justify-center bg-arcade-bg"
+          className="arcade-overlay fixed inset-0 z-[97] flex items-center justify-center"
           initial={{ clipPath: `circle(0% at ${origin.x}px ${origin.y}px)` }}
           animate={{
             clipPath:
@@ -127,14 +127,14 @@ export function RouteTransition() {
           {/* grid texture */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-[linear-gradient(to_right,rgba(148,163,184,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.06)_1px,transparent_1px)] bg-[size:52px_52px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_40%,transparent_100%)]"
+            className="absolute inset-0 bg-[linear-gradient(to_right,rgba(168,85,247,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(168,85,247,0.08)_1px,transparent_1px)] bg-[size:52px_52px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_40%,transparent_100%)]"
           />
 
           {/* corner ticks */}
-          <span className="absolute left-8 top-8 h-6 w-6 border-l border-t border-cyan-400/40" />
-          <span className="absolute right-8 top-8 h-6 w-6 border-r border-t border-cyan-400/40" />
-          <span className="absolute bottom-8 left-8 h-6 w-6 border-b border-l border-cyan-400/40" />
-          <span className="absolute bottom-8 right-8 h-6 w-6 border-b border-r border-cyan-400/40" />
+          <span className="absolute left-8 top-8 h-6 w-6 border-l border-t border-arcade-cyan/60 shadow-[-2px_-2px_12px_rgba(0,229,255,0.4)]" />
+          <span className="absolute right-8 top-8 h-6 w-6 border-r border-t border-arcade-cyan/60 shadow-[2px_-2px_12px_rgba(0,229,255,0.4)]" />
+          <span className="absolute bottom-8 left-8 h-6 w-6 border-b border-l border-arcade-cyan/60 shadow-[-2px_2px_12px_rgba(0,229,255,0.4)]" />
+          <span className="absolute bottom-8 right-8 h-6 w-6 border-b border-r border-arcade-cyan/60 shadow-[2px_2px_12px_rgba(0,229,255,0.4)]" />
 
           {/* center content */}
           <div className="relative px-6 text-center">
