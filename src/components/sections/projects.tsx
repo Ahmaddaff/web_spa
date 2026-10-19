@@ -88,7 +88,7 @@ export function Projects() {
                     </div>
 
                     <p className="mt-4 flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-violet-300/80">
-                      <span className="text-slate-600">
+                      <span className="text-slate-400">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <span className="text-cyan-400/60">/</span>
@@ -109,7 +109,7 @@ export function Projects() {
                       ))}
                     </div>
 
-                    <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/5 pt-4 opacity-60 transition-opacity duration-300 group-hover:opacity-100">
+                    <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-arcade-line/70 pt-4 opacity-60 transition-opacity duration-300 group-hover:opacity-100">
                       {project.demo ? (
                         <a
                           href={project.demo}

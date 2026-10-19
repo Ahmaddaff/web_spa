@@ -68,7 +68,7 @@ export function PhotoAmbience() {
         className="absolute left-1/2 top-1/2 h-[130%] w-[132%]"
         style={{
           background:
-            "conic-gradient(from 0deg, transparent 0deg, rgba(34,211,238,0.5) 36deg, transparent 110deg, transparent 230deg, rgba(139,92,246,0.5) 292deg, transparent 360deg)",
+            "conic-gradient(from 0deg, transparent 0deg, rgba(0,229,255,0.5) 36deg, transparent 110deg, transparent 230deg, rgba(168,85,247,0.5) 292deg, transparent 360deg)",
           WebkitMaskImage:
             "radial-gradient(closest-side, transparent 56%, #000 70%, #000 82%, transparent 93%)",
           maskImage:
@@ -86,7 +86,7 @@ export function PhotoAmbience() {
         className="absolute -left-8 top-0 h-[125%] w-[13%]"
         style={{
           background:
-            "linear-gradient(180deg, transparent, rgba(34,211,238,0.35), transparent)",
+            "linear-gradient(180deg, transparent, rgba(0,229,255,0.35), transparent)",
           filter: "blur(6px)",
         }}
       />
@@ -96,7 +96,7 @@ export function PhotoAmbience() {
         className="absolute -right-6 top-0 h-[125%] w-[11%]"
         style={{
           background:
-            "linear-gradient(180deg, transparent, rgba(139,92,246,0.4), transparent)",
+            "linear-gradient(180deg, transparent, rgba(168,85,247,0.4), transparent)",
           filter: "blur(6px)",
         }}
       />
@@ -112,7 +112,7 @@ export function PhotoAmbience() {
         className="absolute -bottom-2 left-1/2 h-12 w-[68%] -translate-x-1/2 rounded-[50%]"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(34,211,238,0.32), rgba(139,92,246,0.14), transparent 75%)",
+            "radial-gradient(closest-side, rgba(0,229,255,0.32), rgba(168,85,247,0.14), transparent 75%)",
           filter: "blur(10px)",
         }}
       />

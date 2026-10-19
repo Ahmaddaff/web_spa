@@ -33,7 +33,7 @@ export function SpotlightCard({
       onMouseEnter={() => setOpacity(1)}
       onMouseLeave={() => setOpacity(0)}
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors duration-300 hover:border-cyan-400/30",
+        "group relative overflow-hidden rounded-2xl border border-arcade-line bg-arcade-card p-6 shadow-arcade-card transition-colors duration-300 hover:border-arcade-cyan/50 hover:shadow-neon-cyan",
         className
       )}
     >
@@ -41,7 +41,7 @@ export function SpotlightCard({
         className="pointer-events-none absolute -inset-px transition-opacity duration-300"
         style={{
           opacity,
-          background: `radial-gradient(300px circle at ${pos.x}px ${pos.y}px, rgba(34,211,238,0.12), transparent 65%)`,
+          background: `radial-gradient(300px circle at ${pos.x}px ${pos.y}px, rgba(0,229,255,0.12), transparent 65%)`,
         }}
       />
       <div className="relative h-full">{children}</div>

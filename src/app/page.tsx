@@ -19,7 +19,7 @@ export default function Home() {
     <UnlockProvider>
       {/* the page shell owns the base colour so no section can ever expose the
           browser's white canvas through a gap, a repaint or a scroll jump */}
-      <main className="relative min-h-screen overflow-x-hidden bg-background">
+      <main className="relative min-h-screen overflow-x-hidden bg-arcade-bg [background-image:radial-gradient(60rem_38rem_at_50%_-8%,rgba(168,85,247,0.16),transparent_70%),radial-gradient(46rem_32rem_at_88%_16%,rgba(255,0,127,0.09),transparent_70%),radial-gradient(52rem_40rem_at_6%_55%,rgba(0,229,255,0.08),transparent_70%)] [background-attachment:fixed]">
         <Preloader />
         <GridBackground />
         <Navbar />

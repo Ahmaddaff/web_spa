@@ -35,7 +35,7 @@ export function StatementMarquee() {
   return (
     <section
       aria-hidden="true"
-      className="group relative -my-2 rotate-[-2deg] scale-[1.06] overflow-hidden border-y border-white/5 bg-[#060606]/85 py-8 backdrop-blur-sm sm:py-10"
+      className="group relative -my-2 rotate-[-2deg] scale-[1.06] overflow-hidden border-y border-arcade-line/70 bg-arcade-bg/85 py-8 backdrop-blur-sm sm:py-10"
     >
       <div className="flex [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
         {row}

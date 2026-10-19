@@ -5,16 +5,17 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a] disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arcade-cyan/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D0B14] disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-gradient-to-r from-cyan-500 to-violet-600 text-white shadow-lg shadow-cyan-500/25 hover:shadow-cyan-400/40 hover:brightness-110",
+          "bg-gradient-to-r from-arcade-magenta to-arcade-purple text-white shadow-neon-magenta hover:shadow-neon-purple hover:brightness-110",
         outline:
-          "border border-cyan-400/30 bg-white/5 text-cyan-100 backdrop-blur hover:border-cyan-300/60 hover:bg-cyan-400/10 hover:text-white",
-        ghost: "hover:bg-white/5 hover:text-cyan-200",
-        link: "text-cyan-300 underline-offset-4 hover:underline",
+          "border border-arcade-purple/40 bg-arcade-card/60 text-arcade-cyan backdrop-blur transition-shadow hover:border-arcade-purple hover:bg-arcade-purple/10 hover:text-white hover:shadow-neon-purple",
+        ghost:
+          "transition-colors hover:bg-arcade-purple/10 hover:text-arcade-cyan hover:shadow-neon-purple",
+        link: "text-arcade-cyan underline-offset-4 hover:underline hover:[text-shadow:0_0_10px_rgba(0,229,255,0.6)]",
       },
       size: {
         default: "h-11 px-6 py-2",

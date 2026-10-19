@@ -84,7 +84,7 @@ export function CursorGlow() {
         className="pointer-events-none fixed left-0 top-0 z-[99]"
       >
         <div className="-translate-x-1/2 -translate-y-1/2">
-          <div className="h-7 w-7 rounded-full border border-cyan-400/40 shadow-[0_0_15px_rgba(34,211,238,0.25)]" />
+          <div className="h-7 w-7 rounded-full border border-cyan-400/40 shadow-[0_0_15px_rgba(0,229,255,0.25)]" />
         </div>
       </motion.div>
 
@@ -119,7 +119,7 @@ export function CursorGlow() {
           transition={{ duration: 0.15 }}
           className="-translate-x-1/2 -translate-y-1/2"
         >
-          <div className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.9)]" />
+          <div className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(0,229,255,0.9)]" />
         </motion.div>
       </motion.div>
     </>

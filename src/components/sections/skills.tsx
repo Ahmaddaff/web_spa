@@ -70,11 +70,11 @@ export function Skills() {
                       <h3 className="font-display text-base font-semibold text-slate-100">
                         {category.title}
                       </h3>
-                      <p className="font-mono text-xs text-slate-500">
+                      <p className="font-mono text-xs text-slate-400">
                         {category.skills.length} skills
                       </p>
                     </div>
-                    <span className="ml-auto font-mono text-[11px] text-slate-600">
+                    <span className="ml-auto font-mono text-[11px] text-slate-400">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                   </div>

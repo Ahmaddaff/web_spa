@@ -129,7 +129,7 @@ export function Preloader() {
           initial={{ scaleX: 0, opacity: 0 }}
           animate={exiting ? { scaleX: 1, opacity: 0 } : { scaleX: 1, opacity: 1 }}
           transition={{ duration: exiting ? 0.3 : 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="h-[2px] w-[min(72vw,560px)] origin-center rounded-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_18px_rgba(34,211,238,0.8)]"
+          className="h-[2px] w-[min(72vw,560px)] origin-center rounded-full bg-gradient-to-r from-transparent via-arcade-cyan to-transparent shadow-[0_0_20px_rgba(0,229,255,0.9)]"
         />
       </div>
 
@@ -141,7 +141,7 @@ export function Preloader() {
           initial={{ opacity: 0, scale: 0.55 }}
           animate={exiting ? { opacity: 0, scale: 0.15 } : { opacity: 1, scale: 1 }}
           transition={{ duration: exiting ? 0.32 : 1.2, ease: "easeOut" }}
-          className="absolute h-40 w-40 rounded-full bg-[radial-gradient(closest-side,rgba(34,211,238,0.55),rgba(139,92,246,0.38),transparent_72%)] blur-xl"
+          className="absolute h-40 w-40 rounded-full bg-[radial-gradient(closest-side,rgba(0,229,255,0.55),rgba(168,85,247,0.38),transparent_72%)] blur-xl"
         />
 
         {/* ---- STAY: outer guard ring (rotates forever) ---- */}
@@ -160,9 +160,9 @@ export function Preloader() {
           >
             <defs>
               <linearGradient id="ringA" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#22d3ee" stopOpacity="1" />
-                <stop offset="55%" stopColor="#8b5cf6" stopOpacity="0.6" />
-                <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
+                <stop offset="0%" stopColor="#00E5FF" stopOpacity="1" />
+                <stop offset="55%" stopColor="#A855F7" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#00E5FF" stopOpacity="0" />
               </linearGradient>
             </defs>
             <circle
@@ -197,7 +197,7 @@ export function Preloader() {
               cy="63"
               r="56"
               fill="none"
-              stroke="rgba(139,92,246,0.5)"
+              stroke="rgba(168,85,247,0.5)"
               strokeWidth="1.1"
               strokeDasharray="3 9"
             />
@@ -215,7 +215,7 @@ export function Preloader() {
               height: p.size,
               marginLeft: -p.size / 2,
               marginTop: -p.size / 2,
-              boxShadow: "0 0 8px rgba(34,211,238,0.9)",
+              boxShadow: "0 0 8px rgba(0,229,255,0.9)",
             }}
             initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
             animate={
@@ -260,7 +260,7 @@ export function Preloader() {
               fill
               priority
               sizes="64px"
-              className="object-contain drop-shadow-[0_0_18px_rgba(34,211,238,0.55)]"
+              className="object-contain drop-shadow-[0_0_18px_rgba(0,229,255,0.55)]"
             />
           </motion.div>
         </motion.div>
@@ -270,7 +270,7 @@ export function Preloader() {
       <motion.div
         animate={{ opacity: exiting ? 0 : 1 }}
         transition={{ duration: exiting ? 0.26 : 0.2 }}
-        className="mt-10 flex items-center font-display text-lg font-extrabold text-slate-100 drop-shadow-[0_0_10px_rgba(34,211,238,0.35)] sm:text-xl"
+        className="mt-10 flex items-center font-display text-lg font-extrabold text-slate-100 drop-shadow-[0_0_10px_rgba(0,229,255,0.35)] sm:text-xl"
         style={{ letterSpacing: "0.4em", marginRight: "-0.4em" }}
       >
         {BRAND.split("").map((ch, i) => (
@@ -305,7 +305,7 @@ export function Preloader() {
             ? { duration: 0.42, times: [0, 0.35, 1], ease: "easeOut" }
             : { duration: 0.2 }
         }
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(closest-side,rgba(255,255,255,0.7),rgba(34,211,238,0.3),transparent_58%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(closest-side,rgba(255,255,255,0.7),rgba(0,229,255,0.3),transparent_58%)]"
       />
     </div>
   );

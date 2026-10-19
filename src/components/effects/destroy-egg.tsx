@@ -36,7 +36,7 @@ export function DestroyEgg() {
           );
           setGlitching(true);
         }}
-        className="font-mono text-xs text-slate-600 underline decoration-slate-700 decoration-dotted underline-offset-4 transition hover:text-cyan-300 hover:decoration-cyan-400/60"
+        className="font-mono text-xs text-slate-400 underline decoration-slate-500 decoration-dotted underline-offset-4 transition hover:text-cyan-300 hover:decoration-cyan-400/60"
       >
         destroy this webpage
       </button>
@@ -60,14 +60,14 @@ export function DestroyEgg() {
               className="absolute inset-0 animate-glitch-scan opacity-60"
               style={{
                 background:
-                  "repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(34,211,238,0.055) 2px 4px)",
+                  "repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,229,255,0.055) 2px 4px)",
               }}
             />
             {/* invert flash — base opacity 0 so the one-shot animation can
                 never leave a white sheet on screen once it has finished */}
             <div className="absolute inset-0 animate-glitch-flash bg-white opacity-0" />
           </div>
-          <p className="fixed bottom-28 left-1/2 z-[96] -translate-x-1/2 whitespace-nowrap rounded-lg border border-cyan-400/30 bg-black/85 px-4 py-2 font-mono text-xs text-cyan-300 shadow-lg shadow-cyan-500/10 backdrop-blur">
+          <p className="fixed bottom-28 left-1/2 z-[96] -translate-x-1/2 whitespace-nowrap rounded-lg border border-cyan-400/30 bg-arcade-bg/90 px-4 py-2 font-mono text-xs text-cyan-300 shadow-lg shadow-cyan-500/10 backdrop-blur">
             {message}
           </p>
         </>

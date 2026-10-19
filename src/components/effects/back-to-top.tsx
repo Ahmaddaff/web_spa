@@ -24,7 +24,7 @@ export function BackToTop() {
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           aria-label="Back to top"
           data-cursor="TOP"
-          className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-cyan-400/30 bg-[#0a0a0a]/80 text-cyan-300 shadow-lg shadow-cyan-500/20 backdrop-blur transition hover:bg-cyan-400/10 hover:text-white"
+          className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-arcade-purple/40 bg-arcade-bg/80 text-arcade-cyan shadow-neon-cyan backdrop-blur transition hover:border-arcade-purple hover:bg-arcade-purple/10 hover:text-white hover:shadow-neon-purple"
         >
           {/* scroll progress ring — fills as the page scrolls down */}
           <svg
@@ -37,7 +37,7 @@ export function BackToTop() {
               cy="24"
               r="20"
               fill="none"
-              stroke="rgba(34,211,238,0.15)"
+              stroke="rgba(0,229,255,0.15)"
               strokeWidth="2"
             />
             <motion.circle
@@ -45,7 +45,7 @@ export function BackToTop() {
               cy="24"
               r="20"
               fill="none"
-              stroke="rgb(34,211,238)"
+              stroke="rgb(0,229,255)"
               strokeWidth="2"
               strokeLinecap="round"
               style={{ pathLength: scrollYProgress }}

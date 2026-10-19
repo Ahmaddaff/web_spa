@@ -39,10 +39,10 @@ export function Experience() {
 
         <div ref={ref} className="relative mx-auto mt-16 max-w-3xl">
           {/* beam track */}
-          <div className="absolute bottom-2 left-[15px] top-2 w-[2px] bg-white/10" />
+          <div className="absolute bottom-2 left-[15px] top-2 w-[2px] bg-arcade-line" />
           <motion.div
             style={{ scaleY }}
-            className="absolute bottom-2 left-[15px] top-2 w-[2px] origin-top bg-gradient-to-b from-cyan-400 via-sky-400 to-violet-500 shadow-[0_0_14px_rgba(34,211,238,0.65)]"
+            className="absolute bottom-2 left-[15px] top-2 w-[2px] origin-top bg-gradient-to-b from-cyan-400 via-arcade-magenta to-violet-500 shadow-[0_0_14px_rgba(0,229,255,0.65)]"
           />
 
           <div className="space-y-10">
@@ -56,12 +56,12 @@ export function Experience() {
                 className="relative pl-14"
               >
                 {/* timeline dot */}
-                <span className="absolute left-0 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-cyan-400/40 bg-[#0a0a0a] shadow-[0_0_18px_rgba(34,211,238,0.45)]">
+                <span className="absolute left-0 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-cyan-400/40 bg-arcade-bg shadow-[0_0_18px_rgba(0,229,255,0.45)]">
                   <span className="absolute inset-0 animate-ping rounded-full bg-cyan-400/25" />
                   <Briefcase className="relative h-3.5 w-3.5 text-cyan-300" />
                 </span>
 
-                <Card className="border-white/10 bg-white/[0.03] p-5 transition-all duration-300 hover:border-cyan-400/40 hover:bg-white/[0.05] hover:shadow-[0_0_30px_rgba(34,211,238,0.1)] sm:p-6">
+                <Card className="p-5 transition-all duration-300 sm:p-6">
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <h3 className="font-display text-lg font-semibold text-slate-100">
                       {exp.org}
@@ -75,10 +75,10 @@ export function Experience() {
                   </div>
 
                   <p className="mt-1.5 flex flex-wrap items-center gap-2 text-sm font-medium text-cyan-300/90">
-                    <span className="font-mono text-xs text-slate-600">
+                    <span className="font-mono text-xs text-slate-400">
                       {String(index + 1).padStart(2, "0")}
                     </span>
-                    <span className="text-slate-600">/</span>
+                    <span className="text-slate-400">/</span>
                     {exp.role}
                   </p>
 

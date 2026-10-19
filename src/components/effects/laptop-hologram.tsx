@@ -42,7 +42,7 @@ const elements: HoloElement[] = [
         <Braces className="h-3 w-3 text-violet-300" />
         <span className="text-slate-400">const</span>
         <span className="text-cyan-300">app</span>
-        <span className="text-slate-500">=</span>
+        <span className="text-slate-400">=</span>
         <span className="text-violet-300">&quot;web&quot;</span>
       </span>
     ),
@@ -122,7 +122,7 @@ export function LaptopHologram() {
             repeat: Infinity,
             ease: "easeOut",
           }}
-          className="absolute left-0 top-0 h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.9)]"
+          className="absolute left-0 top-0 h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_rgba(0,229,255,0.9)]"
         />
       ))}
 
@@ -145,7 +145,7 @@ export function LaptopHologram() {
             ease: "easeOut",
             times: [0, 0.22, 0.78, 1],
           }}
-          className={`absolute whitespace-nowrap rounded-lg border border-cyan-400/25 bg-black/55 px-2.5 py-1.5 font-mono text-[10px] shadow-lg shadow-cyan-500/10 backdrop-blur-sm ${el.className}`}
+          className={`arcade-pop absolute whitespace-nowrap rounded-lg px-2.5 py-1.5 font-mono text-[10px] text-cyan-200 backdrop-blur-sm ${el.className}`}
         >
           {el.content}
         </motion.div>

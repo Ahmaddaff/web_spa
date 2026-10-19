@@ -50,7 +50,7 @@ function CoreMesh({ progress }: { progress: MotionValue<number> }) {
       <group ref={group}>
         <Icosahedron args={[1.7, 4]} ref={mesh}>
           <MeshDistortMaterial
-            color="#22d3ee"
+            color="#00E5FF"
             roughness={0.2}
             metalness={0.9}
             distort={0.35}
@@ -59,7 +59,7 @@ function CoreMesh({ progress }: { progress: MotionValue<number> }) {
         </Icosahedron>
         <Icosahedron args={[2.35, 1]}>
           <meshBasicMaterial
-            color="#a78bfa"
+            color="#FF007F"
             wireframe
             transparent
             opacity={0.16}
@@ -146,8 +146,8 @@ export function HeroScene() {
         }}
       >
         <ambientLight intensity={0.7} />
-        <directionalLight position={[5, 5, 5]} intensity={1.4} color="#67e8f9" />
-        <pointLight position={[-6, -4, -2]} intensity={2} color="#a78bfa" />
+        <directionalLight position={[5, 5, 5]} intensity={1.4} color="#00E5FF" />
+        <pointLight position={[-6, -4, -2]} intensity={2} color="#FF007F" />
         <CoreMesh progress={smoothProgress} />
         <Stars radius={90} depth={60} count={1800} factor={4} saturation={0} fade speed={1.2} />
       </Canvas>

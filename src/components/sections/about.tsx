@@ -53,7 +53,7 @@ export function About() {
               {/* subtle aura behind the figure */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute left-1/2 top-[45%] -z-10 h-[110%] w-[125%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(34,211,238,0.16),rgba(139,92,246,0.1),transparent_72%)] blur-3xl"
+                className="pointer-events-none absolute left-1/2 top-[45%] -z-10 h-[110%] w-[125%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(0,229,255,0.16),rgba(168,85,247,0.1),transparent_72%)] blur-3xl"
               />
               {/* ground shadow */}
               <div
@@ -72,7 +72,7 @@ export function About() {
               <PhotoAmbienceSweep />
             </div>
 
-            <Card className="flex flex-1 flex-col border-white/10 bg-white/[0.03]">
+            <Card className="flex flex-1 flex-col border-arcade-line bg-arcade-card">
               <CardContent className="flex flex-1 flex-col justify-center space-y-3 p-5 text-sm">
                 <p className="flex items-center gap-2.5 text-slate-300">
                   <MapPin className="h-4 w-4 shrink-0 text-cyan-400" />
@@ -98,7 +98,7 @@ export function About() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="flex h-full flex-col"
           >
-            <div className="mb-3 inline-flex items-center gap-2 rounded-md border border-white/10 bg-black/30 px-2.5 py-1 font-mono text-[11px] text-slate-500">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-md border border-arcade-line bg-arcade-bg/70 px-2.5 py-1 font-mono text-[11px] text-slate-400">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
               AHDAVERSE
             </div>
@@ -120,12 +120,12 @@ export function About() {
               {stats.map((stat) => (
                 <div
                   key={stat.label}
-                  className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-center transition hover:border-cyan-400/40 hover:shadow-[0_0_24px_rgba(34,211,238,0.12)]"
+                  className="rounded-2xl border border-arcade-line bg-arcade-card p-4 text-center transition hover:border-cyan-400/40 hover:shadow-[0_0_24px_rgba(0,229,255,0.12)]"
                 >
                   <p className="font-display text-3xl font-bold text-gradient text-glow">
                     <Counter to={stat.value} suffix={stat.suffix} />
                   </p>
-                  <p className="mt-1 font-mono text-[10px] uppercase leading-snug tracking-wider text-slate-500">
+                  <p className="mt-1 font-mono text-[10px] uppercase leading-snug tracking-wider text-slate-400">
                     {stat.label}
                   </p>
                 </div>
@@ -133,8 +133,8 @@ export function About() {
             </div>
 
             {/* focus areas — pinned to the bottom so it lines up with the left card */}
-            <div className="mt-auto rounded-2xl border border-white/10 bg-white/[0.02] p-4">
-              <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-slate-600">
+            <div className="mt-auto rounded-2xl border border-arcade-line bg-arcade-card p-4">
+              <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-slate-400">
                 // focus areas
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -153,7 +153,7 @@ export function About() {
 
         {/* Education + Languages */}
         <div className="mt-12 grid gap-6 md:grid-cols-2">
-          <Card className="border-white/10 bg-white/[0.03]">
+          <Card className="border-arcade-line bg-arcade-card">
             <CardContent className="p-6">
               <h3 className="flex items-center gap-2 font-display text-lg font-semibold text-slate-100">
                 <GraduationCap className="h-5 w-5 text-cyan-300" />
@@ -163,12 +163,12 @@ export function About() {
                 {education.map((edu) => (
                   <div
                     key={edu.school}
-                    className="relative border-l border-white/10 pl-5"
+                    className="relative border-l border-arcade-line pl-5"
                   >
                     <span
                       className={`absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full ${
                         edu.current
-                          ? "bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.8)]"
+                          ? "bg-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.8)]"
                           : "bg-slate-600"
                       }`}
                     />
@@ -183,7 +183,7 @@ export function About() {
             </CardContent>
           </Card>
 
-          <Card className="border-white/10 bg-white/[0.03]">
+          <Card className="border-arcade-line bg-arcade-card">
             <CardContent className="p-6">
               <h3 className="flex items-center gap-2 font-display text-lg font-semibold text-slate-100">
                 <LanguagesIcon className="h-5 w-5 text-violet-300" />
@@ -196,11 +196,11 @@ export function About() {
                       <span className="font-medium text-slate-200">
                         {lang.name}
                       </span>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-400">
                         {lang.level}
                       </span>
                     </div>
-                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/5">
+                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-arcade-card">
                       <motion.div
                         initial={{ width: 0 }}
                         whileInView={{ width: `${lang.percent}%` }}

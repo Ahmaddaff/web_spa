@@ -225,7 +225,7 @@ export function Minigame() {
           spawnBurst(
             s.w * (0.2 + Math.random() * 0.6),
             s.h * (0.15 + Math.random() * 0.4),
-            ["#22d3ee", "#a78bfa", "#f472b6", "#fbbf24"][i % 4],
+            ["#00E5FF", "#A855F7", "#FF007F", "#fbbf24"][i % 4],
             2
           );
         }
@@ -386,7 +386,7 @@ export function Minigame() {
       if (overlapsX && dy < 58) {
         c.taken = true;
         s.score += 10;
-        spawnBurst(px, s.h - c.y, "#22d3ee", 8);
+        spawnBurst(px, s.h - c.y, "#00E5FF", 8);
       }
     }
 
@@ -429,8 +429,8 @@ export function Minigame() {
 
     // background
     const grad = ctx.createLinearGradient(0, 0, 0, h);
-    grad.addColorStop(0, "#0b0b14");
-    grad.addColorStop(1, "#101018");
+    grad.addColorStop(0, "#0D0B14");
+    grad.addColorStop(1, "#151320");
     ctx.fillStyle = grad;
     ctx.fillRect(-10, -10, w + 20, h + 20);
 
@@ -440,7 +440,7 @@ export function Minigame() {
       const sx = ((st.x - s.camX * 0.22) % (w * 2) + w * 2) % (w * 2);
       if (sx < w) {
         ctx.globalAlpha = 0.35 + 0.3 * Math.sin(t * 2 + st.p);
-        ctx.fillStyle = "#8ea2c0";
+        ctx.fillStyle = "#94A3B8";
         ctx.fillRect(sx, st.y, st.r, st.r);
       }
     }
@@ -455,23 +455,23 @@ export function Minigame() {
         ctx.font = "900 110px 'Arial Black', sans-serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillStyle = i === s.zone ? "rgba(167,139,250,0.10)" : "rgba(255,255,255,0.035)";
+        ctx.fillStyle = i === s.zone ? "rgba(168,85,247,0.14)" : "rgba(255,255,255,0.035)";
         ctx.fillText(ZONES[i].name, zx, h * 0.42);
       }
     }
 
     // ground
     const gy = h - GROUND_H;
-    ctx.fillStyle = "#15151f";
+    ctx.fillStyle = "#1A1626";
     ctx.fillRect(-10, gy, w + 20, GROUND_H + 10);
-    ctx.strokeStyle = "rgba(34,211,238,0.35)";
+    ctx.strokeStyle = "rgba(0,229,255,0.35)";
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(-10, gy);
     ctx.lineTo(w + 10, gy);
     ctx.stroke();
     // chevrons
-    ctx.fillStyle = "rgba(34,211,238,0.10)";
+    ctx.fillStyle = "rgba(0,229,255,0.10)";
     const chevW = 26;
     const off = s.camX % chevW;
     for (let x = -off - chevW; x < w + chevW; x += chevW) {
@@ -492,9 +492,9 @@ export function Minigame() {
       ctx.save();
       ctx.translate(px, py);
       ctx.scale(0.4 + sq * 0.6, 1);
-      ctx.shadowColor = "rgba(34,211,238,0.8)";
+      ctx.shadowColor = "rgba(0,229,255,0.8)";
       ctx.shadowBlur = 12;
-      ctx.fillStyle = "#22d3ee";
+      ctx.fillStyle = "#00E5FF";
       ctx.beginPath();
       ctx.moveTo(0, -11);
       ctx.lineTo(9, 0);
@@ -513,7 +513,7 @@ export function Minigame() {
       const cx2 = bx + b.w / 2;
       const cy2 = by + b.h / 2;
       // zone-based color (each zone gets a different hue)
-      const zoneColors = ["#f43f5e", "#a78bfa", "#22d3ee", "#fbbf24"];
+      const zoneColors = ["#FF007F", "#A855F7", "#00E5FF", "#fbbf24"];
       const baseColor = zoneColors[s.zone % zoneColors.length];
       ctx.save();
       ctx.translate(cx2, cy2);
@@ -599,7 +599,7 @@ export function Minigame() {
 
     if (!sprite) {
       // fallback silhouette until the sprite sheet loads
-      ctx.fillStyle = "#22d3ee";
+      ctx.fillStyle = "#00E5FF";
       roundRect(ctx, cx, feetY - ch, cw, ch, 10);
       ctx.fill();
     } else {
@@ -634,7 +634,7 @@ export function Minigame() {
       if (flash) ctx.globalAlpha = 0.35;
       // soft rim light: the outfit is near-black and would otherwise vanish
       // against the near-black background
-      ctx.shadowColor = "rgba(34,211,238,0.55)";
+      ctx.shadowColor = "rgba(0,229,255,0.55)";
       ctx.shadowBlur = 14;
       // Draw the whole cell rather than a tight crop, anchored so that the head
       // sits on the pivot and the feet sit on the ground line. Because every
@@ -667,21 +667,21 @@ export function Minigame() {
     ctx.textBaseline = "top";
     // score
     ctx.textAlign = "left";
-    ctx.fillStyle = "#e2e8f0";
+    ctx.fillStyle = "#F8FAFC";
     ctx.fillText(`SCORE ${String(s.score).padStart(4, "0")}`, 16, 14);
     // lives
     ctx.textAlign = "right";
-    ctx.fillStyle = "#f43f5e";
+    ctx.fillStyle = "#FF007F";
     ctx.fillText("♥".repeat(Math.max(0, s.lives)) + "♡".repeat(Math.max(0, 3 - s.lives)), w - 16, 14);
     // zone
     ctx.textAlign = "center";
-    ctx.fillStyle = "#a78bfa";
+    ctx.fillStyle = "#A855F7";
     ctx.fillText(`ZONE ${s.zone + 1}/${ZONES.length} — ${ZONES[s.zone].name}`, w / 2, 14);
     // progress bar
     const prog = Math.min(1, s.camX / TOTAL_LEN);
     ctx.fillStyle = "rgba(255,255,255,0.12)";
     ctx.fillRect(16, 36, w - 32, 4);
-    ctx.fillStyle = "#22d3ee";
+    ctx.fillStyle = "#00E5FF";
     ctx.fillRect(16, 36, (w - 32) * prog, 4);
 
     // zone banner
@@ -690,7 +690,7 @@ export function Minigame() {
       ctx.globalAlpha = a;
       ctx.textAlign = "center";
       ctx.font = "900 30px 'Arial Black', sans-serif";
-      ctx.fillStyle = "#a78bfa";
+      ctx.fillStyle = "#A855F7";
       ctx.fillText(`ZONE ${s.zone + 1} — ${ZONES[s.zone].name}`, w / 2, h * 0.24);
       ctx.globalAlpha = 1;
     }
@@ -851,7 +851,7 @@ export function Minigame() {
         <div
           ref={wrapRef}
           data-cursor="JUMP"
-          className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b14] shadow-[0_0_60px_rgba(34,211,238,0.07)]"
+          className="relative overflow-hidden rounded-2xl border border-arcade-line bg-arcade-bg shadow-[0_0_60px_rgba(168,85,247,0.20)]"
         >
           <canvas
             ref={canvasRef}
@@ -865,7 +865,7 @@ export function Minigame() {
             <div
               onPointerDown={onPointerDown}
               onPointerUp={onPointerUp}
-              className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center gap-3 bg-[#0b0b14]/80 backdrop-blur-sm"
+              className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center gap-3 bg-arcade-bg/80 backdrop-blur-sm"
             >
               <p className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
                 <span className="text-gradient">AHDAVERSE RUNNER</span>
@@ -886,7 +886,7 @@ export function Minigame() {
           )}
 
           {phase === "over" && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#0b0b14]/85 backdrop-blur-sm">
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-arcade-bg/85 backdrop-blur-sm">
               <p className="font-display text-3xl font-extrabold text-rose-400 sm:text-4xl">
                 GAME OVER
               </p>
@@ -903,7 +903,7 @@ export function Minigame() {
           )}
 
           {phase === "win" && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#0b0b14]/70 backdrop-blur-sm">
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-arcade-bg/70 backdrop-blur-sm">
               <p className="font-display text-3xl font-extrabold text-cyan-300 sm:text-4xl">
                 LEVEL COMPLETE!
               </p>
@@ -915,7 +915,7 @@ export function Minigame() {
               </p>
               <button
                 onClick={goContact}
-                className="mt-2 rounded-full bg-gradient-to-r from-cyan-400 to-violet-500 px-6 py-2 font-mono text-xs font-bold tracking-[0.25em] text-[#0a0a0a] transition hover:opacity-90"
+                className="mt-2 rounded-full bg-gradient-to-r from-arcade-magenta to-arcade-purple px-6 py-2 font-mono text-xs font-bold tracking-[0.25em] text-arcade-bg transition hover:opacity-90"
               >
                 LET&apos;S TALK →
               </button>
@@ -923,7 +923,7 @@ export function Minigame() {
           )}
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] tracking-[0.2em] text-slate-500">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] tracking-[0.2em] text-slate-400">
           <span>// runner v1.0 — built with canvas + framer motion</span>
           <span>{best > 0 ? `BEST ${best}` : "NO RECORD YET"}</span>
         </div>

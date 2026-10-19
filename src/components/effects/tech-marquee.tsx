@@ -15,7 +15,7 @@ function MarqueeRow({ reverse }: { reverse?: boolean }) {
         {[...marqueeItems, ...marqueeItems].map((item, index) => (
           <span
             key={`${item}-${index}`}
-            className="flex items-center gap-10 whitespace-nowrap font-display text-sm font-medium tracking-wide text-slate-500 sm:text-base"
+            className="flex items-center gap-10 whitespace-nowrap font-display text-sm font-medium tracking-wide text-slate-400 sm:text-base"
           >
             {item}
             <span className="text-cyan-500/40">&#8226;</span>
@@ -30,7 +30,7 @@ export function TechMarquee() {
   return (
     <section
       aria-hidden="true"
-      className="group relative border-y border-white/5 bg-background py-6"
+      className="group relative border-y border-arcade-line/70 bg-background py-6"
     >
       <div className="space-y-3">
         <MarqueeRow />

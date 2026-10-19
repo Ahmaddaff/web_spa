@@ -84,7 +84,7 @@ export function Contact() {
             transition={{ duration: 0.5 }}
             className="space-y-4"
           >
-            <div className="inline-flex items-center gap-2 rounded-lg border border-emerald-400/20 bg-emerald-400/5 px-3 py-1.5 font-mono text-xs text-emerald-300">
+            <div className="inline-flex items-center gap-2 rounded-lg border border-emerald-400/20 bg-emerald-400/5 px-3 py-1.5 font-mono text-xs text-emerald-300 shadow-[0_0_16px_rgba(0,255,102,0.2)]">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
@@ -92,8 +92,8 @@ export function Contact() {
               avg. response &lt; 24h
             </div>
 
-            <Card className="border-white/10 bg-white/[0.03]">
-              <CardContent className="divide-y divide-white/5 p-0">
+            <Card className="border-arcade-line bg-arcade-card">
+              <CardContent className="divide-y divide-arcade-line/70 p-0">
                 {contactItems.map((item) => (
                   <div
                     key={item.label}
@@ -103,7 +103,7 @@ export function Contact() {
                       <item.icon className="h-4 w-4" />
                     </span>
                     <div className="min-w-0">
-                      <p className="text-xs uppercase tracking-wider text-slate-500">
+                      <p className="text-xs uppercase tracking-wider text-slate-400">
                         {item.label}
                       </p>
                       {item.href ? (
@@ -112,7 +112,7 @@ export function Contact() {
                           data-cursor={
                             item.href.startsWith("mailto:") ? "MAIL" : "CHAT"
                           }
-                          className="truncate text-sm font-medium text-slate-200 transition hover:text-cyan-300"
+                          className="neon-link truncate text-sm font-medium text-slate-200 hover:text-arcade-cyan"
                         >
                           {item.value}
                         </a>
@@ -127,7 +127,7 @@ export function Contact() {
               </CardContent>
             </Card>
 
-            <Card className="border-white/10 bg-white/[0.03]">
+            <Card className="border-arcade-line bg-arcade-card">
               <CardContent className="p-5">
                 <p className="text-sm text-slate-400">Temui saya di:</p>
                 <div className="mt-4 flex flex-wrap gap-3">
@@ -139,7 +139,7 @@ export function Contact() {
                       rel="noreferrer"
                       title={social.name}
                       data-cursor="OPEN"
-                      className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-400 transition hover:-translate-y-0.5 hover:border-cyan-400/40 hover:text-cyan-300"
+                      className="flex h-11 w-11 items-center justify-center rounded-xl border border-arcade-line bg-arcade-card text-slate-400 transition hover:-translate-y-0.5 hover:border-arcade-cyan/50 hover:text-arcade-cyan hover:shadow-neon-cyan"
                     >
                       <social.icon className="h-5 w-5" />
                       <span className="sr-only">{social.name}</span>
@@ -157,7 +157,7 @@ export function Contact() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <Card className="border-white/10 bg-white/[0.03]">
+            <Card className="border-arcade-line bg-arcade-card">
               <CardContent className="p-6">
                 {sent ? (
                   <motion.div

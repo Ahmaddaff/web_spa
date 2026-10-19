@@ -72,12 +72,12 @@ export function Hero() {
             transition={{ duration: 0.5 }}
             className="mb-6 flex flex-wrap items-center gap-3"
           >
-            <div className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/40 px-3 py-1.5 font-mono text-xs backdrop-blur">
+            <div className="inline-flex items-center gap-2 rounded-lg border border-arcade-line bg-arcade-bg/70 px-3 py-1.5 font-mono text-xs backdrop-blur">
               <span className="text-emerald-400">$</span>
               <TypedLine
                 segments={[
                   { text: " whoami", className: "text-slate-400" },
-                  { text: " → ", className: "text-slate-600" },
+                  { text: " → ", className: "text-slate-400" },
                   { text: "ahmad-dafanda", className: "text-cyan-300" },
                 ]}
               />
@@ -168,7 +168,7 @@ export function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.55 }}
-            className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-500"
+            className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-400"
           >
             <span className="inline-flex items-center gap-1.5">
               <MapPin className="h-4 w-4 text-cyan-500/70" />
@@ -182,7 +182,7 @@ export function Hero() {
               <Mail className="h-4 w-4 text-cyan-500/70" />
               {profile.email}
             </a>
-            <span className="font-mono text-xs text-slate-600">
+            <span className="font-mono text-xs text-slate-400">
               remotely available · UTC+7
             </span>
           </motion.div>
@@ -199,7 +199,7 @@ export function Hero() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 + i * 0.07 }}
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-400 transition hover:-translate-y-0.5 hover:border-cyan-400/40 hover:text-cyan-300"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-arcade-line bg-arcade-card text-slate-400 transition hover:-translate-y-0.5 hover:border-cyan-400/40 hover:text-cyan-300"
               >
                 <social.icon className="h-[18px] w-[18px]" />
               </motion.a>
@@ -218,11 +218,11 @@ export function Hero() {
               target="_blank"
               rel="noreferrer"
               data-cursor="OPEN"
-              className="text-slate-500 transition hover:text-cyan-300"
+              className="text-slate-400 transition hover:text-cyan-300"
             >
               follow on github <span aria-hidden="true">&#8599;</span>
             </a>
-            <span aria-hidden="true" className="text-slate-700">
+            <span aria-hidden="true" className="text-slate-500">
               /
             </span>
             <DestroyEgg />
@@ -240,7 +240,7 @@ export function Hero() {
           {/* aura glow behind the figure */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-[45%] -z-10 h-[115%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(34,211,238,0.22),rgba(139,92,246,0.14),transparent_72%)] blur-3xl"
+            className="pointer-events-none absolute left-1/2 top-[45%] -z-10 h-[115%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(0,229,255,0.22),rgba(168,85,247,0.14),transparent_72%)] blur-3xl"
           />
           {/* ground shadow for grounding */}
           <div
@@ -263,7 +263,7 @@ export function Hero() {
                   delay: 1 + i * 0.3,
                 },
               }}
-              className={`absolute z-20 hidden rounded-full border border-white/10 bg-black/50 px-3 py-1 font-mono text-[11px] text-slate-300 backdrop-blur sm:block ${chip.className}`}
+              className={`absolute z-20 hidden rounded-full border border-arcade-line bg-arcade-bg/70 px-3 py-1 font-mono text-[11px] text-slate-300 backdrop-blur sm:block ${chip.className}`}
             >
               <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-cyan-400 align-middle" />
               {chip.label}
@@ -298,7 +298,7 @@ export function Hero() {
             transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
             className="glass absolute -bottom-6 left-1/2 z-20 w-max rounded-2xl px-5 py-3 text-center shadow-xl shadow-black/40"
           >
-            <p className="font-mono text-[11px] uppercase tracking-wider text-slate-500">
+            <p className="font-mono text-[11px] uppercase tracking-wider text-slate-400">
               // currently
             </p>
             <p className="mt-0.5 text-sm font-semibold text-cyan-300">
