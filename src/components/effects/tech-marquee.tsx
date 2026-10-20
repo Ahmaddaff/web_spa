@@ -15,7 +15,7 @@ function MarqueeRow({ reverse }: { reverse?: boolean }) {
         {[...marqueeItems, ...marqueeItems].map((item, index) => (
           <span
             key={`${item}-${index}`}
-            className="flex items-center gap-10 whitespace-nowrap font-display text-sm font-medium tracking-wide text-slate-400 sm:text-base"
+            className="inline-flex items-center gap-3 whitespace-nowrap rounded-full border border-arcade-purple/25 bg-arcade-card/60 px-4 py-1.5 font-display text-sm font-medium tracking-wide text-slate-300 shadow-[0_0_18px_-8px_rgba(168,85,247,0.9)] transition-all hover:border-arcade-cyan/50 hover:text-arcade-cyan hover:shadow-[0_0_22px_-6px_rgba(0,229,255,0.95)] sm:text-base"
           >
             {item}
             <span className="text-cyan-500/40">&#8226;</span>

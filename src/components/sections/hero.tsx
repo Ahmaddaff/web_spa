@@ -14,6 +14,7 @@ import { TypedLine } from "@/components/effects/typed-line";
 import { DestroyEgg } from "@/components/effects/destroy-egg";
 import { LaptopHologram } from "@/components/effects/laptop-hologram";
 import { PhotoAmbience, PhotoAmbienceSweep } from "@/components/effects/photo-ambience";
+import { HeroCursorParticles } from "@/components/effects/hero-cursor-particles";
 import { HeroScene } from "@/components/three/hero-scene";
 import { profile, socials } from "@/data/site-data";
 import { useUnlock } from "@/components/providers/unlock-provider";
@@ -62,6 +63,9 @@ export function Hero() {
 
       <HeroScene />
 
+      {/* neon particle trail that follows the cursor inside the hero */}
+      <HeroCursorParticles />
+
       <div className="container relative z-10 grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10">
         {/* Left: copy */}
         <div>
@@ -72,7 +76,7 @@ export function Hero() {
             transition={{ duration: 0.5 }}
             className="mb-6 flex flex-wrap items-center gap-3"
           >
-            <div className="inline-flex items-center gap-2 rounded-lg border border-arcade-line bg-arcade-bg/70 px-3 py-1.5 font-mono text-xs backdrop-blur">
+            <div className="inline-flex items-center gap-2 rounded-lg border border-arcade-cyan/40 bg-arcade-bg/70 px-3 py-1.5 font-mono text-xs shadow-[0_0_20px_-8px_rgba(0,229,255,0.95)] backdrop-blur">
               <span className="text-emerald-400">$</span>
               <TypedLine
                 segments={[

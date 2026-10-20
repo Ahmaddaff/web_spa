@@ -10,9 +10,12 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-gradient-to-r from-arcade-magenta to-arcade-purple text-white shadow-neon-magenta hover:shadow-neon-purple hover:brightness-110",
+          /* PRIMARY CTA — solid vivid magenta + the loudest glow on the page,
+             so "Play Game" is unmistakably the focal point */
+          "bg-arcade-magenta text-white shadow-neon-magenta hover:bg-[#FF2A93] hover:shadow-[0_0_0_1px_rgba(255,0,127,0.6),0_0_26px_rgba(255,0,127,0.6),0_0_60px_-6px_rgba(255,0,127,0.55)] active:bg-[#E0006F]",
         outline:
-          "border border-arcade-purple/40 bg-arcade-card/60 text-arcade-cyan backdrop-blur transition-shadow hover:border-arcade-purple hover:bg-arcade-purple/10 hover:text-white hover:shadow-neon-purple",
+          /* SECONDARY CTA — true ghost button: transparent fill, thin neon hairline */
+          "border border-arcade-purple/60 bg-transparent text-arcade-cyan shadow-none transition-all hover:border-arcade-cyan hover:bg-arcade-purple/5 hover:text-white hover:shadow-neon-cyan",
         ghost:
           "transition-colors hover:bg-arcade-purple/10 hover:text-arcade-cyan hover:shadow-neon-purple",
         link: "text-arcade-cyan underline-offset-4 hover:underline hover:[text-shadow:0_0_10px_rgba(0,229,255,0.6)]",

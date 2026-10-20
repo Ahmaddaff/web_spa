@@ -11,6 +11,8 @@ import { navLinks, profile } from "@/data/site-data";
 import { useScrollSpy } from "@/hooks/use-scroll-spy";
 import { LetterLink } from "@/components/effects/letter-link";
 import { useUnlock } from "@/components/providers/unlock-provider";
+import { XpIndicator } from "@/components/gamification/xp-indicator";
+import { SfxToggle } from "@/components/gamification/sfx-toggle";
 
 const LOCKED_HREFS = ["#about", "#skills", "#experience", "#projects"];
 const OPEN_IDS = ["home", "minigame", "contact"];
@@ -86,6 +88,9 @@ export function Navbar() {
         </ul>
 
         <div className="flex items-center gap-2">
+          {/* gamification read-outs — new widgets, existing logic untouched */}
+          <XpIndicator />
+          <SfxToggle />
           <Button asChild variant="outline" size="sm" className="hidden sm:inline-flex">
             <a href={profile.resumeUrl} download data-cursor="GET">
               <Download className="h-4 w-4" />
@@ -139,7 +144,7 @@ export function Navbar() {
                 <a
                   href={profile.resumeUrl}
                   download
-                  className="flex items-center justify-center gap-2 rounded-xl border border-arcade-purple/40 bg-arcade-purple/10 px-3 py-2.5 text-sm font-medium text-violet-200 transition-shadow hover:shadow-neon-purple"
+                  className="flex items-center justify-center gap-2 rounded-xl border border-arcade-purple/60 bg-transparent px-3 py-2.5 text-sm font-medium text-arcade-cyan transition-all hover:border-arcade-cyan hover:text-white hover:shadow-neon-cyan"
                 >
                   <Download className="h-4 w-4" />
                   Download CV

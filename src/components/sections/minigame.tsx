@@ -915,7 +915,7 @@ export function Minigame() {
               </p>
               <button
                 onClick={goContact}
-                className="mt-2 rounded-full bg-gradient-to-r from-arcade-magenta to-arcade-purple px-6 py-2 font-mono text-xs font-bold tracking-[0.25em] text-arcade-bg transition hover:opacity-90"
+                className="mt-2 rounded-full bg-arcade-magenta px-6 py-2 font-mono text-xs font-bold tracking-[0.25em] text-white shadow-neon-magenta transition hover:shadow-[0_0_0_1px_rgba(255,0,127,0.6),0_0_26px_rgba(255,0,127,0.6),0_0_60px_-6px_rgba(255,0,127,0.55)]"
               >
                 LET&apos;S TALK →
               </button>

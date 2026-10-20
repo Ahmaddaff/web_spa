@@ -33,7 +33,7 @@ export function SpotlightCard({
       onMouseEnter={() => setOpacity(1)}
       onMouseLeave={() => setOpacity(0)}
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-arcade-line bg-arcade-card p-6 shadow-arcade-card transition-colors duration-300 hover:border-arcade-cyan/50 hover:shadow-neon-cyan",
+        "group relative overflow-hidden rounded-2xl border border-arcade-cyan/25 bg-arcade-card p-6 shadow-[0_0_24px_-10px_rgba(0,229,255,0.75)] transition-all duration-300 hover:border-arcade-cyan/60 hover:shadow-[0_0_0_1px_rgba(0,229,255,0.45),0_0_34px_-6px_rgba(0,229,255,0.95)]",
         className
       )}
     >
